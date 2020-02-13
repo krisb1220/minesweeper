@@ -1,6 +1,6 @@
 # TODO LIST
 
-[x] Overarching logic & data building
-[] GUI (rows)
-[] Score count
-[] Timer
+- [ x ] Overarching logic & data building
+- [ ] GUI (rows/grid)
+- [ ] Score count
+- [ ] Timer
