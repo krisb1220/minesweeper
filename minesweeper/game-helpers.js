@@ -88,7 +88,7 @@ function testGame(x,y,bombs,iterations) {
     } else {
       console.error('Test FAILED!!!!' + failedString);
     }
-.
+
     console.table( {
       "game object": field,
       "failed": failedList

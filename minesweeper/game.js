@@ -11,6 +11,9 @@ function populateField(x,y, numberBombs) {
   field.useableTiles = field.x * field.y,
   field.numberTiles = calcTiles(x,y);
   field.numberBombs = numberBombs;
+  field.won = false;
+  field.flagsPlaced = 0;
+  field.currentTime = 0;
 
   for(cells=1; cells<field.numberTiles+1; cells++ ) {
       createTileObject(cells);
