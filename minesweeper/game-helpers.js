@@ -1,3 +1,4 @@
+
 /**
  * A simple forEach() implementation for Arrays, Objects and NodeLists
  * @private
@@ -5,6 +6,7 @@
  * @param {Function} callback Callback function for each iteration
  * @param {Array|Object|NodeList} scope Object/NodeList/Array that forEach is iterating over (aka `this`)
  */
+
 var forEach = function (collection, callback, scope) {
 	if (Object.prototype.toString.call(collection) === '[object Object]') {
 		for (var prop in collection) {
@@ -19,30 +21,82 @@ var forEach = function (collection, callback, scope) {
 	}
 };
 
-function returnTileHTML(cellNumber) {
-  return '<div id="' + cellNumber + '"><div class="tile-inner"><p class="tile-number"></p></div></div>'
+function rnd(min,max){
+  return Math.ceil(Math.random()*(max-min+1)+min );
 }
 
+ 
 function createTileObject(cellNumber) {
   field.fieldObject[cellNumber] = {
     hasBomb:  false,
     bombsInCell: 0,
-    integerLocation: cellNumber,
-    htmlElement: returnTileHTML(cellNumber)
+    integerLocation: cellNumber
   }
 }
 
 function calcTiles(x,y) {
-  return x*y;
+  return x*y + (x*2);
 }
 
+function returnTileHTML(tileObject) {
+  let number = tileObject.bombsInCell;
+  let id = tileObject.integerValue
+  return '<div id="' + id + '"><div class="tile-inner"><p class="tile-number">' + number + '</p></div></div>'
+}
 
+/*---------------TEST FUNCTION-------------- */
+function testGame(x,y,bombs,iterations) {
+  console.time("%c all tests finished in....",'background: #222; color: #fff');
+  console.group("tests");
 
-/*
+  for(a=0; a<iterations;a++) {
+    let passed = true;
+    let failedList = [];
 
+    console.group("test " + a)
+    console.time("test " + a + " finished in");
+ 
+    minesweeper(x,y,bombs);
+    
+    /*CONDITIONS */
 
-TO TARGET TILES BASED ON PROXIMITY USE 
+    if(field.bombLocations.length != bombs) {
+      passed=false;
+      failedList.push("BOMB LOCATIONS LENGTH FAILED......")
+    } 
 
-field.fieldObject[field.fieldObject[88].integerLocation - 8]
+    forEach(field.bombLocations, function(value){
+      if(value >= (field.numberTiles-field.x)) {
+          passed = false;
+          failedList.push( "BOMB LOCATIONS TOO HIGH")
+      }
+  });
 
-*/
+  forEach(field.bombLocations, function(value){
+    if(value < field.x) {
+        passed = false;
+        failedList.push( "BOMB LOCATIONS TOO LOW")
+    }
+});
+
+  /* END CONDITIONS */
+
+    /*RUN AFTER ALL TESTS HAVE BEEN RUN */
+    if(passed) {
+      console.log('%c Test ' + a + ': SUCCESS', "background:#0a2");
+      failedList.push("none")
+    } else {
+      console.error('Test FAILED!!!!' + failedString);
+    }
+.
+    console.table( {
+      "game object": field,
+      "failed": failedList
+    });
+
+    console.timeEnd("test " + a + " finished in")
+    console.groupEnd("test " + a)
+  }
+  console.timeEnd("%c all tests finished in....",'background: #222; color: #fff');
+  console.groupEnd("tests")
+}
