@@ -86,7 +86,7 @@ function appendBombsToFieldObject(){
 
 /*** start test function */
 function testGame(x,y,bombs,iterations) {
-  console.time("all tests finished in....");
+  console.time("%c all tests finished in....",'background: #222; color: #fff');
   console.group("tests");
 
   for(a=0; a<iterations;a++) {
@@ -123,12 +123,12 @@ function testGame(x,y,bombs,iterations) {
 
     /*RUN AFTER ALL TESTS HAVE BEEN RUN */
     if(passed) {
-      console.warn('Test ' + a + ': SUCCESS');
+      console.log('%c Test ' + a + ': SUCCESS', "background:#0a2");
       failedList.push("none")
     } else {
       console.error('Test FAILED!!!!' + failedString);
     }
-
+.
     console.table( {
       "game object": field,
       "failed": failedList
@@ -137,7 +137,7 @@ function testGame(x,y,bombs,iterations) {
     console.timeEnd("test " + a + " finished in")
     console.groupEnd("test " + a)
   }
-  console.timeEnd("all tests finished in....");
+  console.timeEnd("%c all tests finished in....",'background: #222; color: #fff');
   console.groupEnd("tests")
 }
 
