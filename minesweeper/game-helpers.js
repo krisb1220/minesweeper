@@ -40,7 +40,7 @@ function calcTiles(x,y) {
 
 function returnTileHTML(tileObject) {
   let number = tileObject.bombsInCell;
-  let id = tileObject.integerValue
+  let id = tileObject.integerLocation;
   // console.log(tileObject);
   return '<div id="' + id + '"><div class="tile-inner"><p class="tile-number">' + number + '</p></div></div>'
 }

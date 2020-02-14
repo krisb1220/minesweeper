@@ -1,5 +1,4 @@
 let field = { };
-let global = {};
 
 function clearBoardHtml() {
   document.querySelector("#minesweeper").innerHTML = '';
