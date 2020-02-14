@@ -28,9 +28,11 @@ function rnd(min,max){
  
 function createTileObject(cellNumber) {
   field.fieldObject[cellNumber] = {
-    hasBomb:  false,
+		hasBomb:  false,
+		hasFlag: false,
     bombsInCell: 0,
-    integerLocation: cellNumber
+		integerLocation: cellNumber,
+		isOpen: false
   }
 }
 
@@ -45,13 +47,30 @@ function returnTileHTML(tileObject) {
   return '<div id="' + id + '"><div class="tile-inner"><p class="tile-number">' + number + '</p></div></div>'
 }
 
+function placeFlag(cell) {
+	//logic
+}
+
+function mineCell(cell) {
+	//logic
+}
+
+function win() {
+	//logic
+}
+
+function lose() {
+	//logic
+}
 
 /*---------------TEST FUNCTION-------------- */
 function testGame(x,y,bombs,iterations) {
   console.time("all tests finished in....");
   console.group("tests");
+	let timesFailed = 0;
 
   for(a=0; a<iterations;a++) {
+		let tilesWithBombs= 0;
     let passed = true;
     let failedList = [];
 
@@ -61,11 +80,6 @@ function testGame(x,y,bombs,iterations) {
     minesweeper(x,y,bombs);
     
     /*CONDITIONS */
-
-    if(field.bombLocations.length != bombs) {
-      passed=false;
-      failedList.push("BOMB LOCATIONS LENGTH FAILED......")
-    } 
 
     forEach(field.bombLocations, function(value){
       if(value >= (field.numberTiles-field.x)) {
@@ -79,8 +93,21 @@ function testGame(x,y,bombs,iterations) {
         passed = false;
         failedList.push( "BOMB LOCATIONS TOO LOW")
     }
-});
+	});
 
+		forEach(field.fieldObject, function(tile){
+			console.log();
+			if(tile.hasBomb != false){
+				tilesWithBombs++
+			}
+		});
+
+		if(tilesWithBombs != field.numberBombs) {
+			passed = false;
+			failedList.push( "NOT ENOUGH BOMBS")
+		}  
+
+	
   /* END CONDITIONS */
 
     /*RUN AFTER ALL TESTS HAVE BEEN RUN */
@@ -88,17 +115,22 @@ function testGame(x,y,bombs,iterations) {
       console.log('%c Test ' + a + ': SUCCESS', "background:#0a2");
       failedList.push("none")
     } else {
-      console.error('Test FAILED!!!!' + failedString);
+			console.log("Times Failed: " + timesFailed)
+      console.error('Test FAILED!!!!' );
     }
 
     console.table( {
       "game object": field,
-      "failed": failedList
+			"failed": failedList,
+			"number bombs": tilesWithBombs
     });
 
     console.timeEnd("test " + a + " finished in")
     console.groupEnd("test " + a)
-  }
+	}
+	console.log("Times Failed: " + timesFailed)	
   console.timeEnd("all tests finished in....");
   console.groupEnd("tests")
 }
+
+// function timeGame()

@@ -49,9 +49,10 @@ function appendBombsToFieldObject(){
 function getBombLocations() {
   
   forEach(field.fieldObject, (value)=>{
-    let numberBombs = 0;
+    let bombsInCell = 0;
 
     if(value.hasBomb) {
+      value.bombsInCell = 'BOMB';
       return;
     } 
     
@@ -75,34 +76,34 @@ function getBombLocations() {
 
 
       if(field.fieldObject[value.integerLocation + 1].hasBomb) {
-        numberBombs++;
+        bombsInCell++;
       } 
     
       if(field.fieldObject[value.integerLocation - 1].hasBomb) {
-        numberBombs++;
+        bombsInCell++;
       } 
     
       if(field.fieldObject[value.integerLocation - field.x].hasBomb) { 
-        numberBombs++;
+        bombsInCell++;
       } 
 
       if(field.fieldObject[value.integerLocation + field.x].hasBomb) {
         
-        numberBombs++;
+        bombsInCell++;
       } 
     
       if(field.fieldObject[value.integerLocation - (field.x + 1)].hasBomb) {
         
-        numberBombs++;
+        bombsInCell++;
       } 
     
       if(field.fieldObject[value.integerLocation - (field.x - 1)].hasBomb) {
         
-        numberBombs++;
+        bombsInCell++;
       } 
     }
 
-    value.bombsInCell = numberBombs;
+    value.bombsInCell = bombsInCell;
 
   })
 
@@ -112,6 +113,7 @@ function getBombLocations() {
 
 function appendTilesToPage(){
   forEach(field.fieldObject, function(tile){
+    // console.log(tile);
     if(tile.integerLocation >= field.x && tile.integerLocation <= field.useableTiles) {
       tile.htmlElement = returnTileHTML(tile);
       document.querySelector("#minesweeper").innerHTML += tile.htmlElement;
