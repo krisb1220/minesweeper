@@ -115,14 +115,11 @@ function appendTilesToPage(){
     // console.log(tile);
     if(tile.integerLocation >= field.x && tile.integerLocation <= field.useableTiles) {
       tile.htmlElement = returnTileHTML(tile);
-      let html = tile.htmlElement;
-      document.querySelector("#minesweeper").innerHTML += html;
+      document.querySelector("#minesweeper").innerHTML += tile.htmlElement;
     } else {
       return;
     }
-  } 
-  
-  );
+  });
 }
 
 
