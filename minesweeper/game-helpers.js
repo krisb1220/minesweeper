@@ -38,6 +38,14 @@ function calcTiles(x,y) {
   return x*y + (x*2);
 }
 
+function returnTileHTML(tileObject) {
+  let number = tileObject.bombsInCell;
+  let id = tileObject.integerValue
+  // console.log(tileObject);
+  return '<div id="' + id + '"><div class="tile-inner"><p class="tile-number">' + number + '</p></div></div>'
+}
+
+
 /*---------------TEST FUNCTION-------------- */
 function testGame(x,y,bombs,iterations) {
   console.time("all tests finished in....");

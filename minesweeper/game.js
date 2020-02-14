@@ -1,4 +1,5 @@
 let field = { };
+let global = {};
 
 function clearBoardHtml() {
   document.querySelector("#minesweeper").innerHTML = '';
@@ -108,12 +109,6 @@ function getBombLocations() {
 
 }
 
-function returnTileHTML(tileObject) {
-  let number = tileObject.bombsInCell;
-  let id = tileObject.integerValue
-  // console.log(tileObject);
-  return '<div id="' + id + '"><div class="tile-inner"><p class="tile-number">' + number + '</p></div></div>'
-}
 
 
 function appendTilesToPage(){
