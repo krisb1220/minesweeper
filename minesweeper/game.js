@@ -109,20 +109,15 @@ function getBombLocations() {
 
 }
 
-
-
 function appendTilesToPage(){
   forEach(field.fieldObject, function(tile){
     // console.log(tile);
-    if(tile.integerLocation >= field.x && tile.integerLocation <= field.useableTiles) {
+    if(tile.integerLocation >= field.x && tile.integerLocation <= field.numberTiles - field.x) {
       tile.htmlElement = returnTileHTML(tile);
       document.querySelector("#minesweeper").innerHTML += tile.htmlElement;
-    } else {
-      return;
-    }
+    } 
   });
 }
-
 
 function minesweeper(x,y,bombs) {
 
@@ -151,10 +146,11 @@ function minesweeper(x,y,bombs) {
 minesweeper(8,11,10);
 
 /*
+* ===Commit Log===*
 
+   !  Fixed bug where last 8 cells were not being added to page...
 
-TO TARGET TILES BASED ON PROXIMITY USE 
-
-field.fieldObject[field.fieldObject[88].integerLocation - 8]
 
 */
+
+// * TO TARGET TILES BASED ON PROXIMITY USE  ield.fieldObject[field.fieldObject[88].integerLocation - 8]

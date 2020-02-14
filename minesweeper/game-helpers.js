@@ -30,9 +30,9 @@ function createTileObject(cellNumber) {
   field.fieldObject[cellNumber] = {
 		hasBomb:  false,
 		hasFlag: false,
+		isOpen: false,
     bombsInCell: 0,
 		integerLocation: cellNumber,
-		isOpen: false
   }
 }
 
@@ -48,7 +48,7 @@ function returnTileHTML(tileObject) {
 }
 
 function placeFlag(cell) {
-	//logic
+	cell.hasFlag = true;
 }
 
 function mineCell(cell) {
