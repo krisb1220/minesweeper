@@ -38,15 +38,9 @@ function calcTiles(x,y) {
   return x*y + (x*2);
 }
 
-function returnTileHTML(tileObject) {
-  let number = tileObject.bombsInCell;
-  let id = tileObject.integerValue
-  return '<div id="' + id + '"><div class="tile-inner"><p class="tile-number">' + number + '</p></div></div>'
-}
-
 /*---------------TEST FUNCTION-------------- */
 function testGame(x,y,bombs,iterations) {
-  console.time("%c all tests finished in....",'background: #222; color: #fff');
+  console.time("all tests finished in....");
   console.group("tests");
 
   for(a=0; a<iterations;a++) {
@@ -97,6 +91,6 @@ function testGame(x,y,bombs,iterations) {
     console.timeEnd("test " + a + " finished in")
     console.groupEnd("test " + a)
   }
-  console.timeEnd("%c all tests finished in....",'background: #222; color: #fff');
+  console.timeEnd("all tests finished in....");
   console.groupEnd("tests")
 }

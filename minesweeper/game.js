@@ -108,10 +108,18 @@ function getBombLocations() {
 
 }
 
+function returnTileHTML(tileObject) {
+  let number = tileObject.bombsInCell;
+  let id = tileObject.integerValue
+  // console.log(tileObject);
+  return '<div id="' + id + '"><div class="tile-inner"><p class="tile-number">' + number + '</p></div></div>'
+}
+
+
 function appendTilesToPage(){
   forEach(field.fieldObject, function(tile){
-    
-    if(tile.integerValue > field.x || tile.integerValue < field.useableTiles) {
+    // console.log(tile);
+    if(tile.integerLocation >= field.x && tile.integerLocation <= field.useableTiles) {
       tile.htmlElement = returnTileHTML(tile);
       let html = tile.htmlElement;
       document.querySelector("#minesweeper").innerHTML += html;
