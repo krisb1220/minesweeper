@@ -58,37 +58,37 @@ function getBombLocations() {
     } 
     
     else {
-      console.log(value);
+      // console.log(value);
       if(field.fieldObject[value.integerLocation + field.x] == undefined) {
         return;
       }
 
-      else if(field.fieldObject[value.integerLocation - field.x] == undefined) {
+      if(field.fieldObject[value.integerLocation - field.x] == undefined) {
         return;
       }
 
-      else if(field.fieldObject[value.integerLocation + (field.x+1)] == undefined) {
+      if(field.fieldObject[value.integerLocation + (field.x+1)] == undefined) {
         return;
       }
 
-      else if(field.fieldObject[value.integerLocation - (field.x + 1)] == undefined) {
+      if(field.fieldObject[value.integerLocation - (field.x + 1)] == undefined) {
         return;
       }
 
 
-      else if(field.fieldObject[value.integerLocation + 1].hasBomb) {
+     if(field.fieldObject[value.integerLocation + 1].hasBomb) {
         bombsInCell++;
       } 
     
-      else if(field.fieldObject[value.integerLocation - 1].hasBomb) {
+     if(field.fieldObject[value.integerLocation - 1].hasBomb) {
         bombsInCell++;
       } 
     
-      else if(field.fieldObject[value.integerLocation - field.x].hasBomb) { 
+      if(field.fieldObject[value.integerLocation - field.x].hasBomb) { 
         bombsInCell++;
       } 
 
-      else if(field.fieldObject[value.integerLocation + field.x].hasBomb) {
+      if(field.fieldObject[value.integerLocation + field.x].hasBomb) {
         bombsInCell++;
       } 
     
@@ -113,12 +113,27 @@ function getBombLocations() {
 
 function appendTilesToPage(){
     clearBoardHtml();
+    addRowsToPage();
+
+    let currentRow = 1;
     forEach(field.fieldObject, function(tile){
-    // console.log(tile);
-    if(tile.integerLocation >= (field.x+3) && tile.integerLocation <= ((field.numberTiles - field.x) - 6)) {
-      tile.htmlElement = returnTileHTML(tile);
-      document.querySelector("#minesweeper").innerHTML += tile.htmlElement;
-    } 
+    console.log(tile);
+      if(tile.integerLocation >= (field.x+3) && tile.integerLocation <= ((field.numberTiles - field.x) - 4)) {
+        tile.htmlElement = returnTileHTML(tile);
+
+          if(tile.integerLocation == field.x + 3 || tile.integerLocation == (field.numberTiles - (field.x-3))) {
+            document.querySelector("#row-"+currentRow).innerHTML += tile.htmlElement;
+            return; 
+          }
+
+          else if((tile.integerLocation - (field.x+3)) % field.x == 0) {
+            currentRow++
+            document.querySelector("#row-"+currentRow).innerHTML += tile.htmlElement;
+          } else {
+            document.querySelector("#row-"+currentRow).innerHTML += tile.htmlElement;
+          }
+
+      } 
   });
 }
 
@@ -165,7 +180,6 @@ function minesweeper(x,y,bombs) {
   getBombLocations();
   appendTilesToPage();
   detectClicks();
-  showBoard();
 }
 
 

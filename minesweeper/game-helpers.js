@@ -78,6 +78,7 @@ function hideBoard() {
 	appendTilesToPage();
 }
 
+
 function placeFlag(tile) {
 
 	// tile.hasFlag ? tile.hasFlag = true : tile.hasFlag = false;
@@ -87,12 +88,14 @@ function placeFlag(tile) {
 	if(tile.hasFlag) {
 		console.log('flag removed')
 		document.getElementById(tile.integerLocation).innerHTML = '';
+		document.getElementById(tile.integerLocation).classList.remove("flagged")
 		tile.hasFlag = false;
 	} 
 
 	else if(!tile.hasFlag) {
 		console.log('flag placed')
-		document.getElementById(tile.integerLocation).innerHTML = String.fromCodePoint(0x1F4A3);
+		document.getElementById(tile.integerLocation).innerHTML = "<p class='flag'>" + String.fromCodePoint(0x1F4A3) + "</p>";
+		document.getElementById(tile.integerLocation).classList.add("flagged")
 		tile.hasFlag = true;
 	} 
 	
@@ -107,8 +110,8 @@ function mineTile(tile) {
 	}
 
 	if(!tile.isMined) {
-		document.getElementById(tile.integerLocation).innerHTML = tile.bombsInCell;
-		document.getElementById(tile.integerLocation).classList += " tile-mined";
+		document.getElementById(tile.integerLocation).innerHTML = "<p class='number'>" + tile.bombsInCell + "</p>";
+		document.getElementById(tile.integerLocation).classList.add("tile-mined");
 	} 
 
 	// if(cell.hasFlag) {
@@ -126,6 +129,11 @@ function lose() {
 	console.log("YOU LOST!")
 }
 
+function addRowsToPage(){
+	for(row=1 ; row < field.y+1 ; row++) {
+		document.getElementById("minesweeper").innerHTML += ' <div class="row" id="row-' + row + '"></div>'
+	}
+}
 
 
 
