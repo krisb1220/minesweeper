@@ -7,6 +7,10 @@
  * @param {Array|Object|NodeList} scope Object/NodeList/Array that forEach is iterating over (aka `this`)
  */
 
+
+ function doNothing(){
+	 return;
+ }
 var forEach = function (collection, callback, scope) {
 	if (Object.prototype.toString.call(collection) === '[object Object]') {
 		for (var prop in collection) {
@@ -30,29 +34,88 @@ function createTileObject(cellNumber) {
   field.fieldObject[cellNumber] = {
 		hasBomb:  false,
 		hasFlag: false,
-		isOpen: false,
+		isMined: false,
     bombsInCell: 0,
 		integerLocation: cellNumber,
   }
 }
 
 function calcTiles(x,y) {
-  return x*y + (x*2);
+  return x*y + ((x*2)+6);
 }
 
 function returnTileHTML(tileObject) {
   let number = tileObject.bombsInCell;
   let id = tileObject.integerLocation;
   // console.log(tileObject);
-  return '<div id="' + id + '"><div class="tile-inner"><p class="tile-number">' + number + '</p></div></div>'
+  return '<div class="tile" id="' + id + '">'+  '</div>';
 }
 
-function placeFlag(cell) {
-	cell.hasFlag = true;
+function returnTileHTMLWithNumber(tileObject) {
+  let number = tileObject.bombsInCell;
+  let id = tileObject.integerLocation;
+  // console.log(tileObject);
+  return '<div class="tile" id="' + id + '">' + number +  '</div>';
 }
 
-function mineCell(cell) {
-	//logic
+
+
+
+function showBoard(){
+  
+  clearBoardHtml();
+  forEach(field.fieldObject, function(tile){
+    // console.log(tile);
+    if(tile.integerLocation >= (field.x+3) && tile.integerLocation <= ((field.numberTiles - field.x) - 3))  {
+      tile.htmlElement = returnTileHTMLWithNumber(tile);
+      
+      document.querySelector("#minesweeper").innerHTML += tile.htmlElement;
+    } 
+  });
+}
+
+function hideBoard() {
+	appendTilesToPage();
+}
+
+function placeFlag(tile) {
+
+	// tile.hasFlag ? tile.hasFlag = true : tile.hasFlag = false;
+
+	console.log(tile.hasFlag);
+
+	if(tile.hasFlag) {
+		console.log('flag removed')
+		document.getElementById(tile.integerLocation).innerHTML = '';
+		tile.hasFlag = false;
+	} 
+
+	else if(!tile.hasFlag) {
+		console.log('flag placed')
+		document.getElementById(tile.integerLocation).innerHTML = String.fromCodePoint(0x1F4A3);
+		tile.hasFlag = true;
+	} 
+	
+	
+
+}
+
+function mineTile(tile) {
+
+	if(tile.hasFlag || tile.isMined) {
+		return;
+	}
+
+	if(!tile.isMined) {
+		document.getElementById(tile.integerLocation).innerHTML = tile.bombsInCell;
+		document.getElementById(tile.integerLocation).classList += " tile-mined";
+	} 
+
+	// if(cell.hasFlag) {
+	// 	return;
+	// }
+
+	// cell.isMined = true;
 }
 
 function win() {
@@ -60,8 +123,26 @@ function win() {
 }
 
 function lose() {
-	//logic
+	console.log("YOU LOST!")
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 /*---------------TEST FUNCTION-------------- */
 function testGame(x,y,bombs,iterations) {
@@ -83,6 +164,7 @@ function testGame(x,y,bombs,iterations) {
 
     forEach(field.bombLocations, function(value){
       if(value >= (field.numberTiles-field.x)) {
+					timesFailed++
           passed = false;
           failedList.push( "BOMB LOCATIONS TOO HIGH")
       }
@@ -90,6 +172,7 @@ function testGame(x,y,bombs,iterations) {
 
   forEach(field.bombLocations, function(value){
     if(value < field.x) {
+				timesFailed++				
         passed = false;
         failedList.push( "BOMB LOCATIONS TOO LOW")
     }
@@ -103,6 +186,7 @@ function testGame(x,y,bombs,iterations) {
 		});
 
 		if(tilesWithBombs != field.numberBombs) {
+			timesFailed++
 			passed = false;
 			failedList.push( "NOT ENOUGH BOMBS")
 		}  
@@ -132,5 +216,3 @@ function testGame(x,y,bombs,iterations) {
   console.timeEnd("all tests finished in....");
   console.groupEnd("tests")
 }
-
-// function timeGame()

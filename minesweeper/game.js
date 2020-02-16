@@ -1,4 +1,5 @@
 let field = { };
+let emojis;
 
 function clearBoardHtml() {
   document.querySelector("#minesweeper").innerHTML = '';
@@ -15,7 +16,7 @@ function populateField(x,y, numberBombs) {
   field.flagsPlaced = 0;
   field.currentTime = 0;
 
-  for(cells=1; cells<field.numberTiles+1; cells++ ) {
+  for(cells=0; cells<field.numberTiles; cells++ ) {
       createTileObject(cells);
   }
 }
@@ -27,7 +28,7 @@ function createBombLocations(tiles, numberBombs ) {
   let numberTiles = tiles - field.x;
   for(let bombs=0; bombs<numberBombs; bombs++){
     
-    let bombLocation = rnd(field.x, (field.numberTiles-(field.x*2)));
+    let bombLocation = rnd(field.x, (field.numberTiles-(field.x+3)));
 
     if(field.bombLocations.includes(bombLocation)) {
       bombLocation = rnd(field.x, (field.numberTiles-field.x*2));
@@ -57,38 +58,37 @@ function getBombLocations() {
     } 
     
     else {
-
+      console.log(value);
       if(field.fieldObject[value.integerLocation + field.x] == undefined) {
         return;
       }
 
-      if(field.fieldObject[value.integerLocation - field.x] == undefined) {
+      else if(field.fieldObject[value.integerLocation - field.x] == undefined) {
         return;
       }
 
-      if(field.fieldObject[value.integerLocation + field.x+1] == undefined) {
+      else if(field.fieldObject[value.integerLocation + (field.x+1)] == undefined) {
         return;
       }
 
-      if(field.fieldObject[value.integerLocation - field.x-2] == undefined) {
+      else if(field.fieldObject[value.integerLocation - (field.x + 1)] == undefined) {
         return;
       }
 
 
-      if(field.fieldObject[value.integerLocation + 1].hasBomb) {
+      else if(field.fieldObject[value.integerLocation + 1].hasBomb) {
         bombsInCell++;
       } 
     
-      if(field.fieldObject[value.integerLocation - 1].hasBomb) {
+      else if(field.fieldObject[value.integerLocation - 1].hasBomb) {
         bombsInCell++;
       } 
     
-      if(field.fieldObject[value.integerLocation - field.x].hasBomb) { 
+      else if(field.fieldObject[value.integerLocation - field.x].hasBomb) { 
         bombsInCell++;
       } 
 
-      if(field.fieldObject[value.integerLocation + field.x].hasBomb) {
-        
+      else if(field.fieldObject[value.integerLocation + field.x].hasBomb) {
         bombsInCell++;
       } 
     
@@ -109,14 +109,40 @@ function getBombLocations() {
 
 }
 
+
+
 function appendTilesToPage(){
-  forEach(field.fieldObject, function(tile){
+    clearBoardHtml();
+    forEach(field.fieldObject, function(tile){
     // console.log(tile);
-    if(tile.integerLocation >= field.x && tile.integerLocation <= field.numberTiles - field.x) {
+    if(tile.integerLocation >= (field.x+3) && tile.integerLocation <= ((field.numberTiles - field.x) - 6)) {
       tile.htmlElement = returnTileHTML(tile);
       document.querySelector("#minesweeper").innerHTML += tile.htmlElement;
     } 
   });
+}
+
+
+function detectClicks() {
+
+  let tiles = document.querySelectorAll(".tile") 
+
+  forEach(tiles, function(tile){
+    tile.addEventListener("click", function(event){
+
+      clicked = field.fieldObject[event.target.id]
+
+       if(event.shiftKey) {
+         placeFlag(clicked);
+       }
+
+       else if(!event.shiftKey){
+        clicked.hasBomb ? lose() : mineTile(clicked);
+       }
+}
+)
+});
+
 }
 
 function minesweeper(x,y,bombs) {
@@ -133,24 +159,32 @@ function minesweeper(x,y,bombs) {
   };
   
 
-  clearBoardHtml();
   populateField(x,y,bombs);
   createBombLocations(field.numberTiles,field.numberBombs);
   appendBombsToFieldObject();
   getBombLocations();
   appendTilesToPage();
-
+  detectClicks();
+  showBoard();
 }
 
 
 minesweeper(8,11,10);
 
 /*
-* ===Commit Log===*
 
-   !  Fixed bug where last 8 cells were not being added to page...
+* ===Commit Log===
 
+  ! 1. Added gui.js
+  ! 2. Added click detection + basic functionality
+  ! 3. Removed complicated HTML file structure
+  ! 4. Changed appendTilesToPage() to not immediately put numbers on page
+  ! 5. added showBoard() and hideBoard to make numbers visible on  page (for debugging)
+  ! 6. Added flags function
+  ! 7. Added mining function
+  ! 8. Fixed bug where number of bombs wasn't being calulated in first cell by adding an extra 3 padding cells on each side (6 total)
+  ! 9. Fixed bug where bombs weren't being added to  last field.x cells 
+
+  TODO: Make it so showBoard() and hideBoard() doesn't break the page
 
 */
-
-// * TO TARGET TILES BASED ON PROXIMITY USE  ield.fieldObject[field.fieldObject[88].integerLocation - 8]

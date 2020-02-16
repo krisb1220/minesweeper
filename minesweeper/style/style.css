@@ -1,0 +1,14 @@
+.tile {
+  padding: 10px;
+  background: gray;
+  border: 1px black solid;
+  width: 25px;
+  height: 25px;
+  text-align: center;
+  margin: 3px auto;
+  user-select: none; }
+
+.tile-mined {
+  background: #ddd; }
+
+/*# sourceMappingURL=style.css.map */
