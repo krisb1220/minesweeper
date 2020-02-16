@@ -175,16 +175,4 @@ minesweeper(8,11,10);
 
 * ===Commit Log===
 
-  ! 1. Added gui.js
-  ! 2. Added click detection + basic functionality
-  ! 3. Removed complicated HTML file structure
-  ! 4. Changed appendTilesToPage() to not immediately put numbers on page
-  ! 5. added showBoard() and hideBoard to make numbers visible on  page (for debugging)
-  ! 6. Added flags function
-  ! 7. Added mining function
-  ! 8. Fixed bug where number of bombs wasn't being calulated in first cell by adding an extra 3 padding cells on each side (6 total)
-  ! 9. Fixed bug where bombs weren't being added to  last field.x cells 
-
-  TODO: Make it so showBoard() and hideBoard() doesn't break the page
-
 */
