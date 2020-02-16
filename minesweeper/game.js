@@ -1,5 +1,5 @@
 let field = { };
-let emojis;
+// let emojis;
 
 function clearBoardHtml() {
   document.querySelector("#minesweeper").innerHTML = '';
@@ -179,6 +179,7 @@ function minesweeper(x,y,bombs) {
   appendBombsToFieldObject();
   getBombLocations();
   appendTilesToPage();
+  getEmojis();
   detectClicks();
 }
 
@@ -188,5 +189,5 @@ minesweeper(8,11,10);
 /*
 
 * ===Commit Log===
-
+  ! 1. Added emoji support
 */
