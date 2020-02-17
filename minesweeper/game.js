@@ -75,29 +75,44 @@ function getBombLocations() {
         return;
       }
 
-
+      //right
      if(field.fieldObject[value.integerLocation + 1].hasBomb) {
         bombsInCell++;
       } 
-    
+
+      //left
      if(field.fieldObject[value.integerLocation - 1].hasBomb) {
         bombsInCell++;
       } 
     
+      //top
       if(field.fieldObject[value.integerLocation - field.x].hasBomb) { 
         bombsInCell++;
       } 
 
+      //top left
+      if(field.fieldObject[(value.integerLocation + field.x)+1].hasBomb) {
+        bombsInCell++;
+      } 
+
+      //top right
+      if(field.fieldObject[(value.integerLocation + field.x)-1].hasBomb) {
+        bombsInCell++;
+      }       
+
+      //bottom
       if(field.fieldObject[value.integerLocation + field.x].hasBomb) {
         bombsInCell++;
       } 
-    
-      if(field.fieldObject[value.integerLocation - (field.x + 1)].hasBomb) {
-        
+
+
+      //bottom right
+      if(field.fieldObject[(value.integerLocation - field.x)+1].hasBomb) {
         bombsInCell++;
       } 
-    
-      if(field.fieldObject[value.integerLocation - (field.x - 1)].hasBomb) {
+
+      //bottom left
+      if(field.fieldObject[(value.integerLocation - field.x)-1].hasBomb) {
         
         bombsInCell++;
       } 
