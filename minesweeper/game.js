@@ -189,5 +189,5 @@ minesweeper(8,11,10);
 /*
 
 * ===Commit Log===
-  ! 1. Added emoji support
+
 */
