@@ -26,6 +26,7 @@ function emojify(name){
  function doNothing(){
 	 return;
  }
+
 var forEach = function (collection, callback, scope) {
 	if (Object.prototype.toString.call(collection) === '[object Object]') {
 		for (var prop in collection) {
@@ -99,21 +100,21 @@ function placeFlag(tile) {
 	// tile.hasFlag ? tile.hasFlag = true : tile.hasFlag = false;
 
 	console.log(tile.hasFlag);
+	if (!tile.isMined) {
+		if(tile.hasFlag) {
+			console.log('flag removed')
+			document.getElementById(tile.integerLocation).innerHTML = '';
+			document.getElementById(tile.integerLocation).classList.remove("flagged")
+			tile.hasFlag = false;
+		} 
 
-	if(tile.hasFlag) {
-		console.log('flag removed')
-		document.getElementById(tile.integerLocation).innerHTML = '';
-		document.getElementById(tile.integerLocation).classList.remove("flagged")
-		tile.hasFlag = false;
-	} 
-
-	else if(!tile.hasFlag) {
-		console.log('flag placed')
-		document.getElementById(tile.integerLocation).innerHTML = "<p class='flag'>" + String.fromCodePoint(0x1F4A3) + "</p>";
-		document.getElementById(tile.integerLocation).classList.add("flagged")
-		tile.hasFlag = true;
-	} 
-	
+		else if(!tile.hasFlag) {
+			console.log('flag placed')
+			document.getElementById(tile.integerLocation).innerHTML = "<p class='flag'>" + String.fromCodePoint(0x1F4A3) + "</p>";
+			document.getElementById(tile.integerLocation).classList.add("flagged")
+			tile.hasFlag = true;
+		} 
+	}
 	
 
 }
@@ -125,6 +126,7 @@ function mineTile(tile) {
 	}
 
 	if(!tile.isMined) {
+		tile.isMined = true;
 		document.getElementById(tile.integerLocation).innerHTML = "<p class='number'>" + tile.bombsInCell + "</p>";
 		document.getElementById(tile.integerLocation).classList.add("tile-mined");
 	} 
@@ -186,7 +188,7 @@ function testGame(x,y,bombs,iterations) {
     /*CONDITIONS */
 
     forEach(field.bombLocations, function(value){
-      if(value >= (field.numberTiles-field.x)) {
+      if(value >= (field.numberTiles-field.x+3)) {
 					timesFailed++
           passed = false;
           failedList.push( "BOMB LOCATIONS TOO HIGH")
@@ -194,7 +196,7 @@ function testGame(x,y,bombs,iterations) {
   });
 
   forEach(field.bombLocations, function(value){
-    if(value < field.x) {
+    if(value < field.x+3) {
 				timesFailed++				
         passed = false;
         failedList.push( "BOMB LOCATIONS TOO LOW")

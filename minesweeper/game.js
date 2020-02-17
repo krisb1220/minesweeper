@@ -24,14 +24,13 @@ function populateField(x,y, numberBombs) {
 
 function createBombLocations(tiles, numberBombs ) {
 
-  field.bombLocations = [];
-  let numberTiles = tiles - field.x;
+
   for(let bombs=0; bombs<numberBombs; bombs++){
     
-    let bombLocation = rnd(field.x, (field.numberTiles-(field.x+3)));
+    let bombLocation = rnd(field.x+3, (field.numberTiles-(field.x+3)));
 
     if(field.bombLocations.includes(bombLocation)) {
-      bombLocation = rnd(field.x, (field.numberTiles-field.x*2));
+      bombLocation = rnd(field.x+3, (field.numberTiles-(field.x+3)));
       field.bombLocations.push(bombLocation);
     }  else {
       field.bombLocations.push(bombLocation);
@@ -57,46 +56,32 @@ function getBombLocations() {
       return;
     } 
     
-    else {
-      // console.log(value);
-      if(field.fieldObject[value.integerLocation + field.x] == undefined) {
-        return;
-      }
-
-      if(field.fieldObject[value.integerLocation - field.x] == undefined) {
-        return;
-      }
-
-      if(field.fieldObject[value.integerLocation + (field.x+1)] == undefined) {
-        return;
-      }
-
-      if(field.fieldObject[value.integerLocation - (field.x + 1)] == undefined) {
-        return;
-      }
+    else if(value.integerLocation >= field.x+3 && value.integerLocation <= field.numberTiles -(field.x+3)) {
 
       //right
-     if(field.fieldObject[value.integerLocation + 1].hasBomb) {
+      if(field.fieldObject[value.integerLocation + 1].hasBomb && value.integerLocation % field.x != 2 ) {
         bombsInCell++;
       } 
 
       //left
-     if(field.fieldObject[value.integerLocation - 1].hasBomb) {
+     if(field.fieldObject[value.integerLocation - 1].hasBomb && value.integerLocation % field.x != 3) {
         bombsInCell++;
-      } 
-    
+      }      
+
+
       //top
       if(field.fieldObject[value.integerLocation - field.x].hasBomb) { 
         bombsInCell++;
       } 
 
-      //top left
-      if(field.fieldObject[(value.integerLocation + field.x)+1].hasBomb) {
+      //top right
+      if(field.fieldObject[(value.integerLocation - field.x)+1].hasBomb && value.integerLocation % field.x != 2 ) {
         bombsInCell++;
       } 
 
-      //top right
-      if(field.fieldObject[(value.integerLocation + field.x)-1].hasBomb) {
+      //top left
+      if(field.fieldObject[(value.integerLocation - field.x)-1].hasBomb  && value.integerLocation % field.x != 3) {
+        
         bombsInCell++;
       }       
 
@@ -105,17 +90,19 @@ function getBombLocations() {
         bombsInCell++;
       } 
 
-
       //bottom right
-      if(field.fieldObject[(value.integerLocation - field.x)+1].hasBomb) {
+      if(field.fieldObject[(value.integerLocation + field.x)+1].hasBomb && value.integerLocation % field.x != 2 ) {
         bombsInCell++;
       } 
 
       //bottom left
-      if(field.fieldObject[(value.integerLocation - field.x)-1].hasBomb) {
-        
+      if(field.fieldObject[(value.integerLocation + field.x)-1].hasBomb  && value.integerLocation % field.x != 3 ) {
         bombsInCell++;
-      } 
+      }       
+
+
+
+
     }
 
     value.bombsInCell = bombsInCell;
@@ -132,8 +119,7 @@ function appendTilesToPage(){
 
     let currentRow = 1;
     forEach(field.fieldObject, function(tile){
-    console.log(tile);
-      if(tile.integerLocation >= (field.x+3) && tile.integerLocation <= ((field.numberTiles - field.x) - 4)) {
+      if(tile.integerLocation >= (field.x+3) && tile.integerLocation < ((field.numberTiles - field.x) - 3)) {
         tile.htmlElement = returnTileHTML(tile);
 
           if(tile.integerLocation == field.x + 3 || tile.integerLocation == (field.numberTiles - (field.x-3))) {
@@ -169,8 +155,7 @@ function detectClicks() {
        else if(!event.shiftKey){
         clicked.hasBomb ? lose() : mineTile(clicked);
        }
-}
-)
+  });
 });
 
 }
@@ -194,15 +179,14 @@ function minesweeper(x,y,bombs) {
   appendBombsToFieldObject();
   getBombLocations();
   appendTilesToPage();
-  getEmojis();
   detectClicks();
 }
 
-
+getEmojis();
 minesweeper(8,11,10);
 
 /*
 
 * ===Commit Log===
-
+ ! 1. Fixed issue where bomb locations were not being calculated correctly
 */
