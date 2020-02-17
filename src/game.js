@@ -188,5 +188,7 @@ minesweeper(8,11,10);
 /*
 
 * ===Commit Log===
- ! 1. Fixed issue where bomb locations were not being calculated correctly
+  ! 1. Fixed issue where bomb locations were not being calculated correctly
+  ! 2. Fixed issue where row-end and row-start bomb indicators were not being calculated correctly
+  
 */
