@@ -10,7 +10,7 @@
 let emojis;
 
 function getEmojis(){
-	fetch("https://raw.githubusercontent.com/krisb1220/minesweeper/master/minesweeper/helpers/emoji.json").then(
+	fetch("https://raw.githubusercontent.com/krisb1220/minesweeper/master/src/helpers/emoji.json").then(
 		function(res){
 			return res.json();
 		}
@@ -27,32 +27,19 @@ function emojify(name){
 	 return;
  }
 
-var forEach = function (collection, callback, scope) {
-	if (Object.prototype.toString.call(collection) === '[object Object]') {
-		for (var prop in collection) {
-			if (Object.prototype.hasOwnProperty.call(collection, prop)) {
-				callback.call(scope, collection[prop], prop, collection);
-			}
-		}
-	} else {
-		for (var i = 0, len = collection.length; i < len; i++) {
-			callback.call(scope, collection[i], i, collection);
-		}
-	}
-};
-
 function rnd(min,max){
   return Math.ceil(Math.random()*(max-min+1)+min );
 }
 
  
 function createTileObject(cellNumber) {
-  field.fieldObject[cellNumber] = {
+  game.gameObject[cellNumber] = {
 		hasBomb:  false,
 		hasFlag: false,
 		isMined: false,
     bombsInCell: 0,
 		integerLocation: cellNumber,
+		borderCells: []
   }
 }
 
@@ -80,9 +67,9 @@ function returnTileHTMLWithNumber(tileObject) {
 function showBoard(){
   
   clearBoardHtml();
-  forEach(field.fieldObject, function(tile){
+  forEach(game.gameObject, function(tile){
     // console.log(tile);
-    if(tile.integerLocation >= (field.x+3) && tile.integerLocation <= ((field.numberTiles - field.x) - 3))  {
+    if(tile.integerLocation >= (game.x+3) && tile.integerLocation <= ((game.numberTiles - game.x) - 3))  {
       tile.htmlElement = returnTileHTMLWithNumber(tile);
       
       document.querySelector("#minesweeper").innerHTML += tile.htmlElement;
@@ -102,14 +89,15 @@ function placeFlag(tile) {
 	console.log(tile.hasFlag);
 	if (!tile.isMined) {
 		if(tile.hasFlag) {
+			game.flagsPlaced++;
 			console.log('flag removed')
 			document.getElementById(tile.integerLocation).innerHTML = '';
 			document.getElementById(tile.integerLocation).classList.remove("flagged")
 			tile.hasFlag = false;
 		} 
 
-		else if(!tile.hasFlag) {
-			console.log('flag placed')
+		else if(!tile.hasFlag && game.flagsPlaced != 0) {
+			game.flagsPlaced--;
 			document.getElementById(tile.integerLocation).innerHTML = "<p class='flag'>" + String.fromCodePoint(0x1F4A3) + "</p>";
 			document.getElementById(tile.integerLocation).classList.add("flagged")
 			tile.hasFlag = true;
@@ -147,25 +135,10 @@ function lose() {
 }
 
 function addRowsToPage(){
-	for(row=1 ; row < field.y+1 ; row++) {
+	for(row=1 ; row < game.y+1 ; row++) {
 		document.getElementById("minesweeper").innerHTML += ' <div class="row" id="row-' + row + '"></div>'
 	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -187,30 +160,30 @@ function testGame(x,y,bombs,iterations) {
     
     /*CONDITIONS */
 
-    forEach(field.bombLocations, function(value){
-      if(value >= (field.numberTiles-field.x+3)) {
+    forEach(game.bombLocations, function(value){
+      if(value >= (game.numberTiles-game.x+3)) {
 					timesFailed++
           passed = false;
           failedList.push( "BOMB LOCATIONS TOO HIGH")
       }
   });
 
-  forEach(field.bombLocations, function(value){
-    if(value < field.x+3) {
+  forEach(game.bombLocations, function(value){
+    if(value < game.x+3) {
 				timesFailed++				
         passed = false;
         failedList.push( "BOMB LOCATIONS TOO LOW")
     }
 	});
 
-		forEach(field.fieldObject, function(tile){
+		forEach(game.gameObject, function(tile){
 			console.log();
 			if(tile.hasBomb != false){
 				tilesWithBombs++
 			}
 		});
 
-		if(tilesWithBombs != field.numberBombs) {
+		if(tilesWithBombs != game.numberBombs) {
 			timesFailed++
 			passed = false;
 			failedList.push( "NOT ENOUGH BOMBS")
@@ -229,7 +202,7 @@ function testGame(x,y,bombs,iterations) {
     }
 
     console.table( {
-      "game object": field,
+      "game object": game,
 			"failed": failedList,
 			"number bombs": tilesWithBombs
     });

@@ -20,11 +20,15 @@
     </div>
 
     <div class="timer">
-      <div class="timer-inner"></div>
+      <div class="timer-inner">
+          <p>
+            <span class="minutes">00</span>:<span class="seconds">00</span>
+          </p>
+      </div>
     </div>
 
     <div class="restart">
-      <div class="restart-inner"></div>
+      <p class="restart-inner">Start</p>
     </div>
 
     <div class="flags">
@@ -46,7 +50,8 @@
 
 </div>
 </body>
- <script src="src/game-helpers.js"></script>
+  <script src="src/helpers/easy-dom.js"></script>
+  <script src="src/helpers/game-helpers.js"></script>
   <script src="src/game.js"></script>
 </html>
 

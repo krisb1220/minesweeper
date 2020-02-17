@@ -1,4 +1,4 @@
-let field = { };
+let game = { };
 // let emojis;
 
 function clearBoardHtml() {
@@ -7,48 +7,47 @@ function clearBoardHtml() {
 
 function populateField(x,y, numberBombs) {
    
-  field.x = x;
-  field.y = y;
-  field.useableTiles = field.x * field.y,
-  field.numberTiles = calcTiles(x,y);
-  field.numberBombs = numberBombs;
-  field.won = false;
-  field.flagsPlaced = 0;
-  field.currentTime = 0;
+  game.x = x;
+  game.y = y;
+  game.useableTiles = game.x * game.y,
+  game.numberTiles = calcTiles(x,y);
+  game.numberBombs = numberBombs;
+  game.won = false;
+  game.flagsPlaced = numberBombs;
+  game.currentTime = 0;
 
-  for(cells=0; cells<field.numberTiles; cells++ ) {
+  for(cells=0; cells<game.numberTiles; cells++ ) {
       createTileObject(cells);
   }
 }
-
 
 function createBombLocations(tiles, numberBombs ) {
 
 
   for(let bombs=0; bombs<numberBombs; bombs++){
     
-    let bombLocation = rnd(field.x+3, (field.numberTiles-(field.x+3)));
+    let bombLocation = rnd(game.x+3, (game.numberTiles-(game.x+3)));
 
-    if(field.bombLocations.includes(bombLocation)) {
-      bombLocation = rnd(field.x+3, (field.numberTiles-(field.x+3)));
-      field.bombLocations.push(bombLocation);
+    if(game.bombLocations.includes(bombLocation)) {
+      bombLocation = rnd(game.x+3, (game.numberTiles-(game.x+3)));
+      game.bombLocations.push(bombLocation);
     }  else {
-      field.bombLocations.push(bombLocation);
+      game.bombLocations.push(bombLocation);
     }
 
   }
 
 }
 
-function appendBombsToFieldObject(){
-  field.bombLocations.forEach(function(bombLocation){
-    field.fieldObject[bombLocation].hasBomb = true;
+function appendBombsTogameObject(){
+  game.bombLocations.forEach(function(bombLocation){
+    game.gameObject[bombLocation].hasBomb = true;
   })
 }
 
 function getBombLocations() {
   
-  forEach(field.fieldObject, (value)=>{
+  forEach(game.gameObject, (value)=>{
     let bombsInCell = 0;
 
     if(value.hasBomb) {
@@ -56,54 +55,53 @@ function getBombLocations() {
       return;
     } 
     
-    else if(value.integerLocation >= field.x+3 && value.integerLocation <= field.numberTiles -(field.x+3)) {
+    else if(value.integerLocation >= game.x+3 && value.integerLocation <= game.numberTiles -(game.x+3)) {
 
       //right
-      if(field.fieldObject[value.integerLocation + 1].hasBomb && value.integerLocation % field.x != 2 ) {
+      if(game.gameObject[value.integerLocation + 1].hasBomb && value.integerLocation % game.x != 2 ) {
         bombsInCell++;
       } 
 
       //left
-     if(field.fieldObject[value.integerLocation - 1].hasBomb && value.integerLocation % field.x != 3) {
+     if(game.gameObject[value.integerLocation - 1].hasBomb && value.integerLocation % game.x != 3) {
         bombsInCell++;
       }      
 
 
       //top
-      if(field.fieldObject[value.integerLocation - field.x].hasBomb) { 
+      if(game.gameObject[value.integerLocation - game.x].hasBomb) { 
         bombsInCell++;
       } 
 
       //top right
-      if(field.fieldObject[(value.integerLocation - field.x)+1].hasBomb && value.integerLocation % field.x != 2 ) {
+      if(game.gameObject[(value.integerLocation - game.x)+1].hasBomb && value.integerLocation % game.x != 2 ) {
         bombsInCell++;
       } 
 
       //top left
-      if(field.fieldObject[(value.integerLocation - field.x)-1].hasBomb  && value.integerLocation % field.x != 3) {
-        
+      if(game.gameObject[(value.integerLocation - game.x)-1].hasBomb  && value.integerLocation % game.x != 3) {        
         bombsInCell++;
       }       
 
       //bottom
-      if(field.fieldObject[value.integerLocation + field.x].hasBomb) {
+      if(game.gameObject[value.integerLocation + game.x].hasBomb) {
         bombsInCell++;
       } 
 
       //bottom right
-      if(field.fieldObject[(value.integerLocation + field.x)+1].hasBomb && value.integerLocation % field.x != 2 ) {
+      if(game.gameObject[(value.integerLocation + game.x)+1].hasBomb && value.integerLocation % game.x != 2 ) {
         bombsInCell++;
       } 
 
       //bottom left
-      if(field.fieldObject[(value.integerLocation + field.x)-1].hasBomb  && value.integerLocation % field.x != 3 ) {
+      if(game.gameObject[(value.integerLocation + game.x)-1].hasBomb  && value.integerLocation % game.x != 3 ) {
         bombsInCell++;
       }       
 
 
 
 
-    }
+}
 
     value.bombsInCell = bombsInCell;
 
@@ -118,16 +116,16 @@ function appendTilesToPage(){
     addRowsToPage();
 
     let currentRow = 1;
-    forEach(field.fieldObject, function(tile){
-      if(tile.integerLocation >= (field.x+3) && tile.integerLocation < ((field.numberTiles - field.x) - 3)) {
+    forEach(game.gameObject, function(tile){
+      if(tile.integerLocation >= (game.x+3) && tile.integerLocation < ((game.numberTiles - game.x) - 3)) {
         tile.htmlElement = returnTileHTML(tile);
 
-          if(tile.integerLocation == field.x + 3 || tile.integerLocation == (field.numberTiles - (field.x-3))) {
+          if(tile.integerLocation == game.x + 3 || tile.integerLocation == (game.numberTiles - (game.x-3))) {
             document.querySelector("#row-"+currentRow).innerHTML += tile.htmlElement;
             return; 
           }
 
-          else if((tile.integerLocation - (field.x+3)) % field.x == 0) {
+          else if((tile.integerLocation - (game.x+3)) % game.x == 0) {
             currentRow++
             document.querySelector("#row-"+currentRow).innerHTML += tile.htmlElement;
           } else {
@@ -141,45 +139,81 @@ function appendTilesToPage(){
 
 function detectClicks() {
 
-  let tiles = document.querySelectorAll(".tile") 
+    let tiles = document.querySelectorAll(".tile") 
 
-  forEach(tiles, function(tile){
-    tile.addEventListener("click", function(event){
+     addEventListenerAll(tiles, "click", function(event){
 
-      clicked = field.fieldObject[event.target.id]
+        clicked = game.gameObject[event.target.id]
 
-       if(event.shiftKey) {
-         placeFlag(clicked);
-       }
+        if(event.shiftKey) {
+          placeFlag(clicked);
+        }
 
-       else if(!event.shiftKey){
-        clicked.hasBomb ? lose() : mineTile(clicked);
-       }
-  });
-});
-
+        else if(!event.shiftKey){
+          clicked.hasBomb ? lose() : mineTile(clicked);
+        }
+    });
 }
 
 function minesweeper(x,y,bombs) {
 
 
-  field = {
+  game = {
     bombLocations: [],
-    numberBombs: '',
-    numberTiles: '',
-    fieldObject: {},
+    numberBombs: ' ',
+    numberTiles: ' ',
+    gameObject: {},
+    flagsPlaced: bombs,
+    gameStarted: false,
     x: 0,
-    y: 0
-  
+    y: 0,
+
+
+    gameTime: {
+        seconds: 0,
+        minutes: 0,
+        hours: 0,
+        start: function(){
+            game.gameTime.interval = setInterval(function(){
+
+            if(game.gameTime.seconds != 60) {
+              game.gameTime.seconds++;
+              game.gameTime.seconds < 10 ?  changeHTML(".seconds",  "0" + game.gameTime.seconds ) : changeHTML(".seconds",  game.gameTime.seconds);
+            } 
+            
+            else {
+              game.gameTime.seconds = 0;
+              game.gameTime.minutes++
+              game.gameTime.seconds++;
+              game.gameTime.minutes < 10 ?  changeHTML('0' + ".minutes",  game.gameTime.minutes) : changeHTML(".minutes",  game.gameTime.minutes);                                   
+              game.gameTime.seconds < 10 ?  changeHTML('0' + ".seconds",  game.gameTime.seconds ) : changeHTML(".seconds",  game.gameTime.seconds);                     
+            }
+            
+            game.gameTime.stop = function(){clearInterval(game.gameTime.interval)};
+
+          }, 1000);
+      }, 
+      
+    }
+    
   };
-  
+
+
 
   populateField(x,y,bombs);
-  createBombLocations(field.numberTiles,field.numberBombs);
-  appendBombsToFieldObject();
+  createBombLocations(game.numberTiles,game.numberBombs);
+  appendBombsTogameObject();
   getBombLocations();
   appendTilesToPage();
   detectClicks();
+
+  /*Init Buttons */
+  
+  ifClicked(".restart-inner", function(){
+    // game.gameStarted ? 
+    minesweeper(8,11,10)
+});
+
 }
 
 getEmojis();
@@ -190,5 +224,6 @@ minesweeper(8,11,10);
 * ===Commit Log===
   ! 1. Fixed issue where bomb locations were not being calculated correctly
   ! 2. Fixed issue where row-end and row-start bomb indicators were not being calculated correctly
+  ! 3. Moved dom-related helpers to helpers/easy-dom.js 
   
 */
