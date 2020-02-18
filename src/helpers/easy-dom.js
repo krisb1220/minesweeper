@@ -35,12 +35,16 @@ function addEventListenerAll(element, listener, callback) {
 function ifClicked(element, callback) {
    
   if (element.__proto__ == Array.prototype || element.__proto__ === NodeList.prototype){
-    forEach(element, function(elementIndividual){
+    element.forEach(function(elementIndividual){
+      console.log("forEach")
       console.log(elementIndividual);
       elementIndividual.addEventListener("click",  callback)
     });
-  } else {
-    $(element).addEventListener("click",  callback);
+  } 
+  
+  else if(element.__proto__ === String.prototype) {
+    console.log("individual")
+    document.querySelector(element).addEventListener("click",  callback);
   }
 }
 

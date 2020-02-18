@@ -14,7 +14,7 @@ function populateField(x,y, numberBombs) {
   game.numberBombs = numberBombs;
   game.won = false;
   game.flagsPlaced = numberBombs;
-  game.currentTime = 0;
+  // game.currentTime = 0;
 
   for(cells=0; cells<game.numberTiles; cells++ ) {
       createTileObject(cells);
@@ -155,25 +155,37 @@ function detectClicks() {
     });
 }
 
-function minesweeper(x,y,bombs) {
+function handleStartTimer(){
 
+  // let element = document.querySelector(".restart-inner");
+  console.log("click");
 
-  game = {
-    bombLocations: [],
-    numberBombs: ' ',
-    numberTiles: ' ',
-    gameObject: {},
-    flagsPlaced: bombs,
-    gameStarted: false,
-    x: 0,
-    y: 0,
+  if(!game.gameStarted){
+    // element.removeEventListener("mousedown", handleStartTimer, true)
+    game.gameStarted = true;      
+    changeHTML(".restart-inner", "Restart");
+    game.gameTime.start();
+    // document.querySelector(".restart-inner").addEventListener("click", handleStartTimer);    
+    return;
+  } 
+  
+  else if (game.gameStarted) {
+    game.gameStarted = false;
+    changeHTML(".restart-inner", "Start");
+    game.gameTime.stop();
+    minesweeper(8,11,10)
+    return;
+  }
 
+}
 
-    gameTime: {
-        seconds: 0,
-        minutes: 0,
-        hours: 0,
-        start: function(){
+function initTimer(){
+  
+    return {
+      seconds: 0,
+      minutes: 0,
+      hours: 0,
+      start: function(){
             game.gameTime.interval = setInterval(function(){
 
             if(game.gameTime.seconds != 60) {
@@ -185,18 +197,38 @@ function minesweeper(x,y,bombs) {
               game.gameTime.seconds = 0;
               game.gameTime.minutes++
               game.gameTime.seconds++;
-              game.gameTime.minutes < 10 ?  changeHTML('0' + ".minutes",  game.gameTime.minutes) : changeHTML(".minutes",  game.gameTime.minutes);                                   
-              game.gameTime.seconds < 10 ?  changeHTML('0' + ".seconds",  game.gameTime.seconds ) : changeHTML(".seconds",  game.gameTime.seconds);                     
+              game.gameTime.minutes < 10 ?  changeHTML(".minutes",  "0" + game.gameTime.minutes) : changeHTML(".minutes",  game.gameTime.minutes);                                   
+              game.gameTime.seconds < 10 ?  changeHTML(".seconds",  "0" + game.gameTime.seconds ) : changeHTML(".seconds",  game.gameTime.seconds);                     
             }
-            
-            game.gameTime.stop = function(){clearInterval(game.gameTime.interval)};
 
           }, 1000);
-      }, 
+      },
       
-    }
+      stop: function(){
+        game.gameTime.seconds = 0;
+        game.gameTime.minutes = 0;
+        clearInterval(game.gameTime.interval)
+      }
     
-  };
+    }
+}
+
+
+function minesweeper(x,y,bombs) {
+
+
+  game = {
+    bombLocations: [],
+    numberBombs: ' ',
+    numberTiles: ' ',
+    gameObject: {},
+    flagsPlaced: bombs,
+    gameStarted: false,
+    gameTime: initTimer(),
+    x: 0,
+    y: 0,
+    
+    };
 
 
 
@@ -206,19 +238,15 @@ function minesweeper(x,y,bombs) {
   getBombLocations();
   appendTilesToPage();
   detectClicks();
+  initTimer();
 
-  /*Init Buttons */
   
-  ifClicked(".restart-inner", function(){
-    // game.gameStarted ? 
-    minesweeper(8,11,10)
-});
 
 }
 
 getEmojis();
 minesweeper(8,11,10);
-
+document.querySelector(".restart-inner").addEventListener("click", handleStartTimer);
 /*
 
 * ===Commit Log===

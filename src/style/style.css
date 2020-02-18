@@ -28,8 +28,15 @@
 
 #game, .restart-inner > p {
   margin: auto 0;
-  padding: 0; }
+  padding: 0;
+  width: auto; }
   #game #controls, .restart-inner > p #controls {
-    display: flex; }
+    display: flex;
+    width: calc(8.4vh*8 + 11px);
+    height: 8.3vh;
+    background: gray; }
+    #game #controls *, .restart-inner > p #controls * {
+      color: white;
+      margin: 10px; }
 
 /*# sourceMappingURL=style.css.map */

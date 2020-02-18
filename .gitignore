@@ -1,4 +1,6 @@
 .sass-cache/
+src/style/.sass-cache
+
 *.css.map
 *.sass.map
 *.scss.map
