@@ -237,16 +237,20 @@ function minesweeper(x,y,bombs) {
   appendBombsTogameObject();
   getBombLocations();
   appendTilesToPage();
-  detectClicks();
   initTimer();
-
+  detectClicks();
   
 
 }
 
+
 getEmojis();
 minesweeper(8,11,10);
 document.querySelector(".restart-inner").addEventListener("click", handleStartTimer);
+document.addEventListener("devicemotion", function(){
+  $("#minesweeper").innerHTML = '';
+})
+
 /*
 
 * ===Commit Log===
