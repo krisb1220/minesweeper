@@ -55,10 +55,13 @@ function returnTileHTML(tileObject) {
 }
 
 function returnTileHTMLWithNumber(tileObject) {
-  let number = tileObject.bombsInCell;
-  let id = tileObject.integerLocation;
+	let number = tileObject.bombsInCell;
+	let id = tileObject.integerLocation;
+	let newHTML = document.createElement("div");
+	newHTML.id = id;
+	newHTML.innerHTML = number;
   // console.log(tileObject);
-  return '<div class="tile" id="' + id + '">' + number +  '</div>';
+  return newHTML;
 }
 
 
@@ -85,6 +88,7 @@ function hideBoard() {
 function placeFlag(tile) {
 
 	// tile.hasFlag ? tile.hasFlag = true : tile.hasFlag = false;
+	let location = tile.integerLocation;
 
 	console.log(tile.hasFlag);
 	if (!tile.isMined) {
@@ -117,6 +121,8 @@ function mineTile(tile) {
 		tile.isMined = true;
 		document.getElementById(tile.integerLocation).innerHTML = "<p class='number'>" + tile.bombsInCell + "</p>";
 		document.getElementById(tile.integerLocation).classList.add("tile-mined");
+		document.getElementById(tile.integerLocation).style.color = game.colors[document.getElementById(tile.integerLocation).innerText];
+
 	} 
 
 	// if(cell.hasFlag) {

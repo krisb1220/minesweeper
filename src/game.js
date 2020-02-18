@@ -103,7 +103,7 @@ function getBombLocations() {
 
 }
 
-    value.bombsInCell = bombsInCell;
+    bombsInCell != 0 ? value.bombsInCell = bombsInCell : value.bombsInCell = '';
 
   })
 
@@ -227,7 +227,7 @@ function minesweeper(x,y,bombs) {
     gameTime: initTimer(),
     x: 0,
     y: 0,
-    
+    colors: ["#000", "#4148e8", "#23a455", "#ee3e35", "#ed5829", "#e5428e", "#512a31", "#ff5000", "#81d53a"]
     };
 
 

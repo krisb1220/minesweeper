@@ -21,6 +21,10 @@ var forEach = function (collection, callback, scope) {
 	}
 };
 
+function createElement(element){
+  return document.createElement(element)
+}
+
 function addEventListenerAll(element, listener, callback) {
    
   if (element.__proto__ === NodeList.prototype){

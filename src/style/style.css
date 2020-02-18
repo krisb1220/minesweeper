@@ -1,16 +1,17 @@
+@import url("https://fonts.googleapis.com/css?family=Merriweather|Montserrat|Odibee+Sans|Roboto+Slab&display=swap");
 * {
   user-select: none; }
 
 .tile {
-  background: #808080;
+  background: #b0b0b0;
   border: 1px black solid;
-  width: 8.3vh;
-  height: 8.3vh;
+  width: 5.3vh;
+  height: 5.3vh;
   display: inline;
   text-align: center; }
 
 .tile-mined {
-  background: #c0c0c0; }
+  background: #e3e3e3; }
 
 .flag {
   padding: 0;
@@ -19,24 +20,39 @@
 .number {
   height: 100%;
   display: inline-block;
-  vertical-align: middle; }
+  vertical-align: top;
+  margin: 1vh 0; }
+
+.number, .tile {
+  font-family: "Roboto Slab";
+  font-weight: 900;
+  font-size: 16px; }
 
 .row {
   display: flex;
+  width: fit-content;
   align-items: center;
   align-content: center; }
 
+#game, .row, #minesweeper {
+  width: fit-content; }
+
 #game, .restart-inner > p {
   margin: auto 0;
-  padding: 0;
-  width: auto; }
-  #game #controls, .restart-inner > p #controls {
-    display: flex;
-    width: calc(8.4vh*8 + 11px);
-    height: 8.3vh;
-    background: gray; }
-    #game #controls *, .restart-inner > p #controls * {
-      color: white;
-      margin: 10px; }
+  padding: 0; }
+
+#controls {
+  display: flex;
+  height: 8.3vh;
+  background: gray;
+  width: 100%;
+  padding: 5px 0px; }
+  #controls * {
+    margin: auto 5px; }
+
+.timer {
+  background: black;
+  color: white;
+  padding: 5px 0; }
 
 /*# sourceMappingURL=style.css.map */
