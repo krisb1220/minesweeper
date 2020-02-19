@@ -47,7 +47,7 @@ function appendBombsTogameObject(){
 
 function getBombLocations() {
   
-  forEach(game.gameObject, (value)=>{
+  forEach(game.gameObject, function(value){
     let bombsInCell = 0;
 
     if(value.hasBomb) {
