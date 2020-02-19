@@ -81,11 +81,13 @@ function placeFlag(tile) {
 			console.log('flag removed')
 			document.getElementById(tile.integerLocation).innerHTML = '';
 			document.getElementById(tile.integerLocation).classList.remove("flagged")
+			$(".flags-inner").innerHTML =  String.fromCodePoint(0x1F4A3) + game.flagsPlaced
 			tile.hasFlag = false;
 		} 
 
 		else if(!tile.hasFlag && game.flagsPlaced != 0) {
 			game.flagsPlaced--;
+			$(".flags-inner").innerHTML =  String.fromCodePoint(0x1F4A3) + game.flagsPlaced
 			document.getElementById(tile.integerLocation).innerHTML = "<p class='flag'>" + String.fromCodePoint(0x1F4A3) + "</p>";
 			document.getElementById(tile.integerLocation).classList.add("flagged")
 			tile.hasFlag = true;

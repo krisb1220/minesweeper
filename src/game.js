@@ -261,15 +261,15 @@ function initTimer(){
       start: function(){
             game.gameTime.interval = setInterval(function(){
 
-            if(game.gameTime.seconds != 60) {
+            if(game.gameTime.seconds != 59) {
               game.gameTime.seconds++;
+              game.gameTime.minutes < 10 ?  changeHTML(".minutes",  "0" + game.gameTime.minutes) : changeHTML(".minutes",  game.gameTime.minutes);                                                 
               game.gameTime.seconds < 10 ?  changeHTML(".seconds",  "0" + game.gameTime.seconds ) : changeHTML(".seconds",  game.gameTime.seconds);
             } 
             
             else {
               game.gameTime.seconds = 0;
               game.gameTime.minutes++
-              game.gameTime.seconds++;
               game.gameTime.minutes < 10 ?  changeHTML(".minutes",  "0" + game.gameTime.minutes) : changeHTML(".minutes",  game.gameTime.minutes);                                   
               game.gameTime.seconds < 10 ?  changeHTML(".seconds",  "0" + game.gameTime.seconds ) : changeHTML(".seconds",  game.gameTime.seconds);                     
             }
@@ -323,9 +323,12 @@ document.querySelector(".restart-inner").addEventListener("click", handleStartTi
 document.addEventListener("devicemotion", function(){
   $("#minesweeper").innerHTML = '';
 })
+$(".flags-inner").innerHTML =  String.fromCodePoint(0x1F4A3) + game.flagsPlaced
+
 
 /*
 
 * ===Commit Log===
-  
+  ! 1. Fixed timer bugs
+  ! 2. Added flag count to GUI
 */
