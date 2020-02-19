@@ -319,9 +319,6 @@ function minesweeper(x,y,bombs) {
 getEmojis();
 minesweeper(8,11,10);
 document.querySelector(".restart-inner").addEventListener("click", handleStartTimer);
-document.addEventListener("devicemotion", function(){
-  $("#minesweeper").innerHTML = '';
-})
 
 
 /*
