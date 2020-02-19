@@ -17,7 +17,7 @@
   padding: 0;
   pointer-events: none; }
 
-.number {
+.number, .flag {
   height: 100%;
   display: inline-block;
   vertical-align: top;

@@ -7,22 +7,6 @@
  * @param {Array|Object|NodeList} scope Object/NodeList/Array that forEach is iterating over (aka `this`)
  */
 
-let emojis;
-
-function getEmojis(){
-	fetch("https://raw.githubusercontent.com/krisb1220/minesweeper/master/src/helpers/emoji.json").then(
-		function(res){
-			return res.json();
-		}
-	).then(function(myJson){
-		emojis = myJson;
-	})
-}
-
-function emojify(name){
-	return String.fromCodePoint("0x" + emojis[name].unicode)
-}
-
  function doNothing(){
 	 return;
  }
@@ -122,7 +106,7 @@ function mineTile(tile) {
 		document.getElementById(tile.integerLocation).innerHTML = "<p class='number'>" + tile.bombsInCell + "</p>";
 		document.getElementById(tile.integerLocation).classList.add("tile-mined");
 		document.getElementById(tile.integerLocation).style.color = game.colors[document.getElementById(tile.integerLocation).innerText];
-
+		checkBombs(tile);
 	} 
 
 	// if(cell.hasFlag) {
