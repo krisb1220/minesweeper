@@ -312,8 +312,7 @@ function minesweeper(x,y,bombs) {
   appendTilesToPage();
   initTimer();
   detectClicks();
-  
-
+  $(".flags-inner").innerHTML =  String.fromCodePoint(0x1F4A3) + game.flagsPlaced  
 }
 
 
@@ -323,7 +322,6 @@ document.querySelector(".restart-inner").addEventListener("click", handleStartTi
 document.addEventListener("devicemotion", function(){
   $("#minesweeper").innerHTML = '';
 })
-$(".flags-inner").innerHTML =  String.fromCodePoint(0x1F4A3) + game.flagsPlaced
 
 
 /*
