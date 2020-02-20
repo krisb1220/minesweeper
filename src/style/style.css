@@ -54,12 +54,13 @@
 
 .timer {
   background: black;
-  color: white;
   padding: 5px 0;
   width: 7vw;
   border-radius: 10px; }
   .timer .timer-inner {
     margin: auto;
     width: fit-content; }
+    .timer .timer-inner .minutes, .timer .timer-inner .seconds {
+      color: #ff4646 !important; }
 
 /*# sourceMappingURL=style.css.map */

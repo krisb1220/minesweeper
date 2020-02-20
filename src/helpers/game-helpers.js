@@ -78,7 +78,6 @@ function placeFlag(tile) {
 	if (!tile.isMined) {
 		if(tile.hasFlag) {
 			game.flagsPlaced++;
-			console.log('flag removed')
 			document.getElementById(tile.integerLocation).innerHTML = '';
 			document.getElementById(tile.integerLocation).classList.remove("flagged")
 			$(".flags-inner").innerHTML =  String.fromCodePoint(0x1F4A3) + game.flagsPlaced
@@ -97,13 +96,14 @@ function placeFlag(tile) {
 
 }
 
-function mineTile(tile) {
+function mineTile(tile, isFromLoss) {
 
 	if(tile.hasFlag || tile.isMined) {
 		return;
 	}
 
-	if(!tile.isMined) {
+	if(!tile.isMined && !tile.hasBomb) {
+		game.minedTiles++
 		tile.isMined = true;
 		document.getElementById(tile.integerLocation).innerHTML = "<p class='number'>" + tile.bombsInCell + "</p>";
 		document.getElementById(tile.integerLocation).classList.add("tile-mined");
@@ -111,19 +111,43 @@ function mineTile(tile) {
 		checkBombs(tile);
 	} 
 
-	// if(cell.hasFlag) {
-	// 	return;
-	// }
+	else if(tile.hasBomb && game.gameStarted) {
+		tile.isMined = true;
+		document.getElementById(tile.integerLocation).innerHTML = "<p class='number'>" + emojify("bomb") + "</p>";
+		document.getElementById(tile.integerLocation).classList.add("tile-mined");
+		game.gameStarted = false;
+		lose();
+	}
+
+	else if(!isFromLoss && game.minedTiles == game.tilesToWin) {
+		win();
+	}
 
 	// cell.isMined = true;
 }
 
+function showBoard(){
+	forEach(game.gameObject, function(tile){
+		let meetsConditions = tile.integerLocation > game.x+2 && tile.integerLocation < game.numberTiles - (game.x+3) && !tile.hasBomb
+		 meetsConditions ? mineTile(tile, true) : doNothing();
+	})
+}
+
 function win() {
-	//logic
+	game.gamesFinished++
+	game.gamesWon++
+	game.gameStarted = false;
+	game.gameTime.stop();
+	console.log("You Win!");
 }
 
 function lose() {
-	console.log("YOU LOST!")
+	// console.log("YOU LOST!")
+	game.gamesFinished++
+	game.gamesLost++
+	game.gameStarted = false;
+	game.gameTime.stop();	
+	showBoard();
 }
 
 function addRowsToPage(){
@@ -169,7 +193,6 @@ function testGame(x,y,bombs,iterations) {
 	});
 
 		forEach(game.gameObject, function(tile){
-			console.log();
 			if(tile.hasBomb != false){
 				tilesWithBombs++
 			}

@@ -1,5 +1,4 @@
-let game = { };
-// let emojis;
+let game = { }; //init game
 
 function clearBoardHtml() {
   document.querySelector("#minesweeper").innerHTML = '';
@@ -12,8 +11,8 @@ function populateField(x,y, numberBombs) {
   game.useableTiles = game.x * game.y,
   game.numberTiles = calcTiles(x,y);
   game.numberBombs = numberBombs;
-  game.won = false;
   game.flagsPlaced = numberBombs;
+  game.tilesToWin = game.useableTiles - game.numberBombs;
   // game.currentTime = 0;
 
   for(cells=0; cells<game.numberTiles; cells++ ) {
@@ -216,16 +215,18 @@ function detectClicks() {
 
         clicked = game.gameObject[event.target.id]
 
-        if(!game.gameStarted && !event.shiftKey){
+        if(game.minedTiles == 0 && !event.shiftKey){
+          console.log("gs")
           gameStarted();
+          mineTile(clicked, false)
         }
 
-        if(event.shiftKey) {
+        else if(event.shiftKey) {
           placeFlag(clicked);
         }
 
         else if(!event.shiftKey){
-          clicked.hasBomb ? lose() : mineTile(clicked);
+          mineTile(clicked, false)
         }
     });
 }
@@ -233,7 +234,6 @@ function detectClicks() {
 function handleStartTimer(){
 
   // let element = document.querySelector(".restart-inner");
-  console.log("click");
 
   if(!game.gameStarted){
     // element.removeEventListener("mousedown", handleStartTimer, true)
@@ -298,6 +298,7 @@ function minesweeper(x,y,bombs) {
     flagsPlaced: bombs,
     gameStarted: false,
     gameTime: initTimer(),
+    minedTiles: 0,
     x: 0,
     y: 0,
     colors: ["#000000", "#4148e8", "#23a455", "#ee3e35", "#34176b", "#512a31", "#ff7ccd", "#ff5000", "#81d53a"]
