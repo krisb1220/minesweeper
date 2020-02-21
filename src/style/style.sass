@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css?family=Merriweather|Montserrat|Odibee+Sans|Roboto+Slab&display=swap')
+@import url('https://fonts.googleapis.com/css?family=Roboto|Orbitron|Roboto+Slab&display=swap')
 
 *
   user-select: none
@@ -21,7 +21,7 @@
   padding: 0
   pointer-events: none
 
-.number
+.number, .flag
     height: 100%
     display: inline-block
     vertical-align: top
@@ -54,16 +54,27 @@
   //   margin: 10px
 
 #controls 
-    display: flex
-    height: 8.3vh
-    background: gray
-    width: 100%
-    padding: 5px 0px
+  display: flex
+  height: 8.3vh
+  background: gray
+  width: 100%
+  padding: 5px 0px
 
-    * 
-      margin: auto 5px
+  * 
+    margin: auto 
+    font-family: "Roboto Slab"
+    color: white
+
 
 .timer 
   background: black 
-  color: white
   padding: 5px 0
+  width: 7vw
+  border-radius: 10px
+
+  .timer-inner 
+    margin: auto
+    width: fit-content
+
+    .minutes, .seconds
+      color: #ff4646 !important

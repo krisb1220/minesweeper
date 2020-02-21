@@ -1,5 +1,4 @@
-let game = { };
-// let emojis;
+let game = { }; //init game
 
 function clearBoardHtml() {
   document.querySelector("#minesweeper").innerHTML = '';
@@ -12,8 +11,8 @@ function populateField(x,y, numberBombs) {
   game.useableTiles = game.x * game.y,
   game.numberTiles = calcTiles(x,y);
   game.numberBombs = numberBombs;
-  game.won = false;
   game.flagsPlaced = numberBombs;
+  game.tilesToWin = game.useableTiles - game.numberBombs;
   // game.currentTime = 0;
 
   for(cells=0; cells<game.numberTiles; cells++ ) {
@@ -109,6 +108,73 @@ function getBombLocations() {
 
 }
 
+function checkBombs(tile) {
+  
+   
+    // if(tile.integerLocation >= game.x+3 && tile.integerLocation <= game.numberTiles -(game.x+3)) {
+
+    //   //right
+    //   if(!game.gameObject[tile.integerLocation + 1].hasBomb && tile.integerLocation % game.x != 2 ) {
+    //     console.log(tile);
+    //     mineTile(game.gameObject[tile.integerLocation + 1].bombsInCell);
+    //   } 
+
+    //   //left
+    //  if(!game.gameObject[tile.integerLocation - 1].hasBomb && tile.integerLocation % game.x != 3) {
+    //   console.log(tile);
+    //     mineTile(game.gameObject[tile.integerLocation - 1].bombsInCell);
+    //   }      
+
+
+    //   //top
+    //   if(!game.gameObject[tile.integerLocation - game.x].hasBomb) { 
+    //     console.log(tile);
+
+    //     mineTile(game.gameObject[tile.integerLocation - game.x]);
+    //   } 
+
+    //   //top right
+    //   if(!game.gameObject[(tile.integerLocation - game.x)+1].hasBomb && tile.integerLocation % game.x != 2 ) {
+    //     console.log(tile);
+
+    //     mineTile(game.gameObject[(tile.integerLocation - game.x)+1]);
+    //   } 
+
+    //   //top left
+    //   if(!game.gameObject[(tile.integerLocation - game.x)-1].hasBomb  && tile.integerLocation % game.x != 3) {        
+    //     console.log(tile);
+
+    //     mineTile(game.gameObject[(tile.integerLocation - game.x)-1]);
+    //   }       
+
+    //   //bottom
+    //   if(!game.gameObject[tile.integerLocation + game.x].hasBomb) {
+    //     console.log(tile);
+
+    //     mineTile(game.gameObject[tile.integerLocation + game.x]);
+    //   } 
+
+    //   //bottom right
+    //   if(!game.gameObject[(tile.integerLocation + game.x)+1].hasBomb && tile.integerLocation % game.x != 2 ) {
+    //     console.log(tile);
+
+    //     mineTile(game.gameObject[(tile.integerLocation + game.x)+1]);
+    //   } 
+
+    //   //bottom left
+    //   if(!game.gameObject[(tile.integerLocation + game.x)-1].hasBomb  && tile.integerLocation % game.x != 3 ) {
+    //     console.log(tile);
+
+    //     mineTile(game.gameObject[(tile.integerLocation + game.x)-1]);
+    //   }       
+
+
+
+
+    // // bombsInCell != 0 ? value.bombsInCell = bombsInCell : value.bombsInCell = '';
+    // }
+}
+
 
 
 function appendTilesToPage(){
@@ -136,7 +202,11 @@ function appendTilesToPage(){
   });
 }
 
-
+function gameStarted(){
+  game.gameStarted = true;
+  game.gameTime.start();
+  changeHTML(".restart-inner", "Restart");
+}
 function detectClicks() {
 
     let tiles = document.querySelectorAll(".tile") 
@@ -145,12 +215,18 @@ function detectClicks() {
 
         clicked = game.gameObject[event.target.id]
 
-        if(event.shiftKey) {
+        if(game.minedTiles == 0 && !event.shiftKey){
+          console.log("gs")
+          gameStarted();
+          mineTile(clicked, false)
+        }
+
+        else if(event.shiftKey) {
           placeFlag(clicked);
         }
 
         else if(!event.shiftKey){
-          clicked.hasBomb ? lose() : mineTile(clicked);
+          mineTile(clicked, false)
         }
     });
 }
@@ -158,13 +234,10 @@ function detectClicks() {
 function handleStartTimer(){
 
   // let element = document.querySelector(".restart-inner");
-  console.log("click");
 
   if(!game.gameStarted){
     // element.removeEventListener("mousedown", handleStartTimer, true)
-    game.gameStarted = true;      
-    changeHTML(".restart-inner", "Restart");
-    game.gameTime.start();
+    gameStarted();
     // document.querySelector(".restart-inner").addEventListener("click", handleStartTimer);    
     return;
   } 
@@ -188,15 +261,15 @@ function initTimer(){
       start: function(){
             game.gameTime.interval = setInterval(function(){
 
-            if(game.gameTime.seconds != 60) {
+            if(game.gameTime.seconds != 59) {
               game.gameTime.seconds++;
+              game.gameTime.minutes < 10 ?  changeHTML(".minutes",  "0" + game.gameTime.minutes) : changeHTML(".minutes",  game.gameTime.minutes);                                                 
               game.gameTime.seconds < 10 ?  changeHTML(".seconds",  "0" + game.gameTime.seconds ) : changeHTML(".seconds",  game.gameTime.seconds);
             } 
             
             else {
               game.gameTime.seconds = 0;
               game.gameTime.minutes++
-              game.gameTime.seconds++;
               game.gameTime.minutes < 10 ?  changeHTML(".minutes",  "0" + game.gameTime.minutes) : changeHTML(".minutes",  game.gameTime.minutes);                                   
               game.gameTime.seconds < 10 ?  changeHTML(".seconds",  "0" + game.gameTime.seconds ) : changeHTML(".seconds",  game.gameTime.seconds);                     
             }
@@ -225,9 +298,10 @@ function minesweeper(x,y,bombs) {
     flagsPlaced: bombs,
     gameStarted: false,
     gameTime: initTimer(),
+    minedTiles: 0,
     x: 0,
     y: 0,
-    colors: ["#000", "#4148e8", "#23a455", "#ee3e35", "#ed5829", "#e5428e", "#512a31", "#ff5000", "#81d53a"]
+    colors: ["#000000", "#4148e8", "#23a455", "#ee3e35", "#34176b", "#512a31", "#ff7ccd", "#ff5000", "#81d53a"]
     };
 
 
@@ -239,23 +313,19 @@ function minesweeper(x,y,bombs) {
   appendTilesToPage();
   initTimer();
   detectClicks();
-  
-
+  $(".flags-inner").innerHTML =  String.fromCodePoint(0x1F4A3) + game.flagsPlaced  
 }
 
 
 getEmojis();
 minesweeper(8,11,10);
 document.querySelector(".restart-inner").addEventListener("click", handleStartTimer);
-document.addEventListener("devicemotion", function(){
-  $("#minesweeper").innerHTML = '';
-})
+
 
 /*
 
 * ===Commit Log===
-  ! 1. Fixed issue where bomb locations were not being calculated correctly
-  ! 2. Fixed issue where row-end and row-start bomb indicators were not being calculated correctly
-  ! 3. Moved dom-related helpers to helpers/easy-dom.js 
-  
+=======
+  ! 1. Fixed timer bugs
+  ! 2. Added flag count to GUI
 */

@@ -1,3 +1,19 @@
+let emojis;
+
+function getEmojis(){
+	fetch("https://raw.githubusercontent.com/krisb1220/minesweeper/master/src/helpers/emoji.json").then(
+		function(res){
+			return res.json();
+		}
+	).then(function(myJson){
+		emojis = myJson;
+	})
+}
+
+function emojify(name){
+	return String.fromCodePoint("0x" + emojis[name].unicode)
+}
+
 function $(element){
 	return document.querySelector(element);
 }
@@ -5,7 +21,6 @@ function $(element){
 function selectAll(element){
 	return document.querySelectorAll(element);
 }
-
 
 var forEach = function (collection, callback, scope) {
 	if (collection.__proto__ === Object.prototype) {
