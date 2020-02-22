@@ -1,4 +1,8 @@
-let emojis;
+/*********************
+*                                          *
+* EASY DOM FUNCTIONS  *
+*                                         *
+********************/
 
 function getEmojis(){
 	fetch("https://raw.githubusercontent.com/krisb1220/minesweeper/master/src/helpers/emoji.json").then(
@@ -18,7 +22,7 @@ function $(element){
 	return document.querySelector(element);
 }
 
-function selectAll(element){
+function $$(element){
 	return document.querySelectorAll(element);
 }
 
@@ -74,3 +78,50 @@ function addHTML(element, string) {
 function changeHTML(element, string) {
 	$(element).innerHTML = string;
 } 
+
+function testRandomNumbers(iterations,range){
+
+  console.time(`${iterations} iterations completed in:`)
+
+  let numbers = {};
+
+  for(i=0;i<iterations;i++){
+    let num = Math.ceil(Math.random()*range)
+    numbers.hasOwnProperty(num) ? numbers[num]++ : numbers[num] = 1;
+  }
+
+  console.timeEnd(`${iterations} iterations completed in:`)
+
+  return numbers;
+
+}
+
+
+
+
+/* ADD PROTOTYPES*/
+
+HTMLElement.prototype.changeHTML = function(string) {
+	this.innerHTML = string;
+}
+
+HTMLElement.prototype.addHTML = function(string){
+  this.innerHTML += string;
+  console.log(this);
+} 
+
+HTMLElement.ifClicked = function(element, callback){
+    this.addEventListener("click",  callback);
+}
+
+NodeList.prototype.addEventListenerAll = function(listener, callback) {
+   
+  if (this.__proto__ === NodeList.prototype){
+    this.forEach(function(elementIndividual){
+      elementIndividual.addEventListener(listener, callback)
+    });
+  } else {
+    console.error("Function ONLY ACCEPTS NodeList");
+  }
+}
+

@@ -61,6 +61,9 @@
     margin: auto;
     width: fit-content; }
     .timer .timer-inner .minutes, .timer .timer-inner .seconds {
-      color: #ff4646 !important; }
+      color: #0dff86 !important; }
+
+.highlight {
+  background: #e3e3e3 !important; }
 
 /*# sourceMappingURL=style.css.map */

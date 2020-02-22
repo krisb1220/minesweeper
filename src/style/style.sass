@@ -1,12 +1,16 @@
 @import url('https://fonts.googleapis.com/css?family=Roboto|Orbitron|Roboto+Slab&display=swap')
 
+$bg: #BDBDBD
+$bgDark: darken($bg, 5%)
+$bgLight: lighten($bg, 15%)
+  
 *
   user-select: none
 
   
 .tile  
   // padding: 20px
-  background: darken(#BDBDBD, 5%)
+  background: $bgDark
   border: 1px black solid
   width: 5.3vh
   height: 5.3vh
@@ -15,7 +19,7 @@
   // margin: 3px 
 
 .tile-mined   
-  background: lighten(#BDBDBD, 15%)
+  background: $bgLight
 
 .flag 
   padding: 0
@@ -77,4 +81,8 @@
     width: fit-content
 
     .minutes, .seconds
-      color: #ff4646 !important
+      color: #0dff86 !important
+
+.highlight 
+  background: $bgLight !important
+  

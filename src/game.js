@@ -1,4 +1,31 @@
-let game = { }; //init game
+let game; //init game
+let emojis;
+
+
+class Tile{
+  
+  constructor(cellNumber) {
+  this.hasBomb = false;
+  this.hasFlag = false;
+  this.isMined = false;
+  this.bombsInCell = 0;
+  this.integerLocation = cellNumber;
+  this.neighbors = [];
+  }
+
+}
+
+
+// class Game{
+//   constructor(x,y,numberBombs){
+//     this.x = x;
+//     this.y = y;
+//     this.numberTiles = x*y;
+//     this.numberBombs = numberBombs;
+//     this.flagsPlaced = numberBombs;
+//     this.tilesToWin = this.numberTiles - numberBombs;
+//   }
+// }
 
 function clearBoardHtml() {
   document.querySelector("#minesweeper").innerHTML = '';
@@ -6,199 +33,129 @@ function clearBoardHtml() {
 
 function populateField(x,y, numberBombs) {
    
-  game.x = x;
-  game.y = y;
-  game.useableTiles = game.x * game.y,
-  game.numberTiles = calcTiles(x,y);
-  game.numberBombs = numberBombs;
-  game.flagsPlaced = numberBombs;
-  game.tilesToWin = game.useableTiles - game.numberBombs;
-  // game.currentTime = 0;
+  // game.x = x;
+  // game.y = y;
+  // game.numberTiles = x*y;
+  // game.numberBombs = numberBombs;
+  // game.flagsPlaced = numberBombs;
+  // game.tilesToWin = game.numberTiles - game.numberBombs;
 
-  for(cells=0; cells<game.numberTiles; cells++ ) {
-      createTileObject(cells);
+  // game = new Game(x,y,numberBombs);
+  for(cells=1; cells<game.numberTiles+1; cells++ ) {
+    game.gameObject[cells] = new Tile(cells);
   }
 }
 
-function createBombLocations(tiles, numberBombs ) {
+function setBombLocations(tiles, numberBombs) {
 
+  let bombLocations = [];
+  let bombsPushed = 0;
+  forEach(game.gameObject, (tile)=>{
 
-  for(let bombs=0; bombs<numberBombs; bombs++){
-    
-    let bombLocation = rnd(game.x+3, (game.numberTiles-(game.x+3)));
+    //get random true/false value
+    let isBomb = Math.random()*50 > 40;
 
-    if(game.bombLocations.includes(bombLocation)) {
-      bombLocation = rnd(game.x+3, (game.numberTiles-(game.x+3)));
-      game.bombLocations.push(bombLocation);
-    }  else {
-      game.bombLocations.push(bombLocation);
+    if(isBomb && bombsPushed != numberBombs){
+      bombsPushed++
+      bombLocations.push(tile.integerLocation)
+      tile.hasBomb = true;
     }
 
-  }
+  });
 
 }
 
-function appendBombsTogameObject(){
-  game.bombLocations.forEach(function(bombLocation){
-    game.gameObject[bombLocation].hasBomb = true;
-  })
-}
-
-function getBombLocations() {
-  
+function getNeighbors() {
   forEach(game.gameObject, (value)=>{
-    let bombsInCell = 0;
+      
+    let lo = value.integerLocation;
 
     if(value.hasBomb) {
       value.bombsInCell = 'BOMB';
       return;
     } 
-    
-    else if(value.integerLocation >= game.x+3 && value.integerLocation <= game.numberTiles -(game.x+3)) {
-
-      //right
-      if(game.gameObject[value.integerLocation + 1].hasBomb && value.integerLocation % game.x != 2 ) {
-        bombsInCell++;
-      } 
-
-      //left
-     if(game.gameObject[value.integerLocation - 1].hasBomb && value.integerLocation % game.x != 3) {
-        bombsInCell++;
-      }      
 
 
-      //top
-      if(game.gameObject[value.integerLocation - game.x].hasBomb) { 
-        bombsInCell++;
-      } 
+    if(lo != 1 && lo >= game.x && lo != game.x) {
+      value.neighbors.push(game.gameObject[lo - game.x]) //top
+    }
+
+    if(lo != game.numberTiles && (lo - game.numberTiles) <= -game.x ){
+      value.neighbors.push(game.gameObject[lo + game.x]) //bottom
+    }
 
       //top right
-      if(game.gameObject[(value.integerLocation - game.x)+1].hasBomb && value.integerLocation % game.x != 2 ) {
-        bombsInCell++;
+      if(lo % game.x != 0  && lo != 1 && lo >= game.x && lo != game.x) {
+        value.neighbors.push(game.gameObject[(lo - game.x)+1]);
       } 
 
       //top left
-      if(game.gameObject[(value.integerLocation - game.x)-1].hasBomb  && value.integerLocation % game.x != 3) {        
-        bombsInCell++;
+      if(lo % game.x != 1 && lo != 1 && lo >= game.x && lo != game.x) {        
+        value.neighbors.push(game.gameObject[(lo - game.x)-1])
       }       
 
-      //bottom
-      if(game.gameObject[value.integerLocation + game.x].hasBomb) {
-        bombsInCell++;
-      } 
-
       //bottom right
-      if(game.gameObject[(value.integerLocation + game.x)+1].hasBomb && value.integerLocation % game.x != 2 ) {
-        bombsInCell++;
+      if(lo % game.x != 0 && (lo - game.numberTiles) <= -game.x && lo != game.x) {
+       value.neighbors.push(game.gameObject[(lo + game.x)+1]);
       } 
 
       //bottom left
-      if(game.gameObject[(value.integerLocation + game.x)-1].hasBomb  && value.integerLocation % game.x != 3 ) {
-        bombsInCell++;
+      if(lo % game.x != 1  && lo != 1 && (lo - game.numberTiles) <= -game.x  ) {
+        value.neighbors.push(game.gameObject[(lo + game.x)-1])
       }       
 
+      
+      //right
+      if(lo % game.x != 0 && lo != game.numberTiles && lo != game.x) {
+        value.neighbors.push(game.gameObject[lo + 1]);
+      } 
+
+      //left
+     if(lo % game.x != 1) {
+      value.neighbors.push(game.gameObject[lo - 1]) 
+      }      
 
 
+  });
 
 }
 
-    bombsInCell != 0 ? value.bombsInCell = bombsInCell : value.bombsInCell = '';
-
-  })
-
-}
-
-function checkBombs(tile) {
+function countBombsInNeighbors(value){
+  // forEach(game.gameObject, (value)=>{
+    
+  let bombsInCell = 0;
   
-   
-    // if(tile.integerLocation >= game.x+3 && tile.integerLocation <= game.numberTiles -(game.x+3)) {
+    forEach(value.neighbors, (neighbor)=>{
+      if(neighbor.hasBomb) {
+        bombsInCell++ 
+      }
+    });
 
-    //   //right
-    //   if(!game.gameObject[tile.integerLocation + 1].hasBomb && tile.integerLocation % game.x != 2 ) {
-    //     console.log(tile);
-    //     mineTile(game.gameObject[tile.integerLocation + 1].bombsInCell);
-    //   } 
-
-    //   //left
-    //  if(!game.gameObject[tile.integerLocation - 1].hasBomb && tile.integerLocation % game.x != 3) {
-    //   console.log(tile);
-    //     mineTile(game.gameObject[tile.integerLocation - 1].bombsInCell);
-    //   }      
-
-
-    //   //top
-    //   if(!game.gameObject[tile.integerLocation - game.x].hasBomb) { 
-    //     console.log(tile);
-
-    //     mineTile(game.gameObject[tile.integerLocation - game.x]);
-    //   } 
-
-    //   //top right
-    //   if(!game.gameObject[(tile.integerLocation - game.x)+1].hasBomb && tile.integerLocation % game.x != 2 ) {
-    //     console.log(tile);
-
-    //     mineTile(game.gameObject[(tile.integerLocation - game.x)+1]);
-    //   } 
-
-    //   //top left
-    //   if(!game.gameObject[(tile.integerLocation - game.x)-1].hasBomb  && tile.integerLocation % game.x != 3) {        
-    //     console.log(tile);
-
-    //     mineTile(game.gameObject[(tile.integerLocation - game.x)-1]);
-    //   }       
-
-    //   //bottom
-    //   if(!game.gameObject[tile.integerLocation + game.x].hasBomb) {
-    //     console.log(tile);
-
-    //     mineTile(game.gameObject[tile.integerLocation + game.x]);
-    //   } 
-
-    //   //bottom right
-    //   if(!game.gameObject[(tile.integerLocation + game.x)+1].hasBomb && tile.integerLocation % game.x != 2 ) {
-    //     console.log(tile);
-
-    //     mineTile(game.gameObject[(tile.integerLocation + game.x)+1]);
-    //   } 
-
-    //   //bottom left
-    //   if(!game.gameObject[(tile.integerLocation + game.x)-1].hasBomb  && tile.integerLocation % game.x != 3 ) {
-    //     console.log(tile);
-
-    //     mineTile(game.gameObject[(tile.integerLocation + game.x)-1]);
-    //   }       
-
-
-
-
-    // // bombsInCell != 0 ? value.bombsInCell = bombsInCell : value.bombsInCell = '';
-    // }
+    return bombsInCell;
+  // });
 }
 
-
+function getBombsInCells(){
+  forEach(game.gameObject, (tile)=>{
+    // console.log(`Counting bombs in Cell ${tile.integerLocation}....`)
+    bombsInCell = countBombsInNeighbors(tile);
+    bombsInCell != 0 ? tile.bombsInCell = bombsInCell : tile.bombsInCell = ''; 
+  });
+}
 
 function appendTilesToPage(){
     clearBoardHtml();
     addRowsToPage();
-
     let currentRow = 1;
     forEach(game.gameObject, function(tile){
-      if(tile.integerLocation >= (game.x+3) && tile.integerLocation < ((game.numberTiles - game.x) - 3)) {
-        tile.htmlElement = returnTileHTML(tile);
 
-          if(tile.integerLocation == game.x + 3 || tile.integerLocation == (game.numberTiles - (game.x-3))) {
-            document.querySelector("#row-"+currentRow).innerHTML += tile.htmlElement;
-            return; 
-          }
-
-          else if((tile.integerLocation - (game.x+3)) % game.x == 0) {
-            currentRow++
-            document.querySelector("#row-"+currentRow).innerHTML += tile.htmlElement;
-          } else {
-            document.querySelector("#row-"+currentRow).innerHTML += tile.htmlElement;
-          }
-
-      } 
+    tile.htmlElement = returnTileHTML(tile);
+    if(tile.integerLocation % game.x == 1 && tile.integerLocation != 1) {
+        currentRow++
+        document.querySelector("#row-"+currentRow).innerHTML += tile.htmlElement;
+      } else {
+        document.querySelector("#row-"+currentRow).innerHTML += tile.htmlElement;
+      }
   });
 }
 
@@ -207,38 +164,56 @@ function gameStarted(){
   game.gameTime.start();
   changeHTML(".restart-inner", "Restart");
 }
+
+function handleClicks(){
+  clicked = game.gameObject[event.target.id]
+
+  if(game.minedTiles == 0 && !event.shiftKey){
+    // console.log("gs")
+    gameStarted();
+    mineTile(clicked, false)
+  }
+
+  else if(event.shiftKey) {
+    placeFlag(clicked);
+  }
+
+  else if(!event.shiftKey){
+    mineTile(clicked, false)
+  }
+
+  console.log(event)
+};
+
 function detectClicks() {
 
-    let tiles = document.querySelectorAll(".tile") 
+    let tiles = $$(".tile") 
 
-     addEventListenerAll(tiles, "click", function(event){
+    $$(".tile").addEventListenerAll("click", function(event){
+      handleClicks(event);
+  });
+}
 
-        clicked = game.gameObject[event.target.id]
+function highlightCell(){
+  let id = event.target.id
+  console.log('dbl');
+  forEach(game.gameObject[id].neighbors, function(neighbors){
+    console.log(neighbors);
+    document.getElementById(neighbors.integerLocation).classList.add("highlight");
 
-        if(game.minedTiles == 0 && !event.shiftKey){
-          console.log("gs")
-          gameStarted();
-          mineTile(clicked, false)
-        }
+    setTimeout(function(){
+      document.getElementById(neighbors.integerLocation).classList.remove("highlight")
+    }, 1000)
 
-        else if(event.shiftKey) {
-          placeFlag(clicked);
-        }
+  });
 
-        else if(!event.shiftKey){
-          mineTile(clicked, false)
-        }
-    });
 }
 
 function handleStartTimer(){
 
-  // let element = document.querySelector(".restart-inner");
 
   if(!game.gameStarted){
-    // element.removeEventListener("mousedown", handleStartTimer, true)
     gameStarted();
-    // document.querySelector(".restart-inner").addEventListener("click", handleStartTimer);    
     return;
   } 
   
@@ -246,7 +221,7 @@ function handleStartTimer(){
     game.gameStarted = false;
     changeHTML(".restart-inner", "Start");
     game.gameTime.stop();
-    minesweeper(8,11,10)
+    minesweeper(8,11,15)
     return;
   }
 
@@ -307,9 +282,9 @@ function minesweeper(x,y,bombs) {
 
 
   populateField(x,y,bombs);
-  createBombLocations(game.numberTiles,game.numberBombs);
-  appendBombsTogameObject();
-  getBombLocations();
+  setBombLocations(game.numberTiles,game.numberBombs);
+  getNeighbors();
+  getBombsInCells();
   appendTilesToPage();
   initTimer();
   detectClicks();
@@ -318,13 +293,8 @@ function minesweeper(x,y,bombs) {
 
 
 getEmojis();
-minesweeper(8,11,10);
+minesweeper(8,11,15);
+
 document.querySelector(".restart-inner").addEventListener("click", handleStartTimer);
 
-
-/*
-
-* ===Commit Log===
-  ! 1. Fixed timer bugs
-  ! 2. Added flag count to GUI
-*/
+$$(".tile").addEventListenerAll("dblclick", highlightCell);
