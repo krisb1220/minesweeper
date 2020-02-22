@@ -33,12 +33,12 @@ function clearBoardHtml() {
 
 function populateField(x,y, numberBombs) {
    
-  // game.x = x;
-  // game.y = y;
-  // game.numberTiles = x*y;
-  // game.numberBombs = numberBombs;
-  // game.flagsPlaced = numberBombs;
-  // game.tilesToWin = game.numberTiles - game.numberBombs;
+  game.x = x;
+  game.y = y;
+  game.numberTiles = x*y;
+  game.numberBombs = numberBombs;
+  game.flagsPlaced = numberBombs;
+  game.tilesToWin = game.numberTiles - game.numberBombs;
 
   // game = new Game(x,y,numberBombs);
   for(cells=1; cells<game.numberTiles+1; cells++ ) {
