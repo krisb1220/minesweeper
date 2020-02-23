@@ -50,12 +50,13 @@ function setBombLocations(tiles, numberBombs) {
 
   let bombLocations = [];
   let bombsPushed = 0;
+  
   forEach(game.gameObject, (tile)=>{
-
+    // console.log(tile);
     //get random true/false value
     let isBomb = Math.random()*50 > 40;
 
-    if(isBomb && bombsPushed != numberBombs){
+    if(isBomb && bombsPushed != numberBombs && !tile.hasBomb){
       bombsPushed++
       bombLocations.push(tile.integerLocation)
       tile.hasBomb = true;
@@ -63,6 +64,8 @@ function setBombLocations(tiles, numberBombs) {
 
   });
 
+  game.bombLocations = bombLocations;
+  
 }
 
 function getNeighbors() {
@@ -182,7 +185,6 @@ function handleClicks(){
     mineTile(clicked, false)
   }
 
-  console.log(event)
 };
 
 function detectClicks() {
@@ -196,9 +198,7 @@ function detectClicks() {
 
 function highlightCell(){
   let id = event.target.id
-  console.log('dbl');
   forEach(game.gameObject[id].neighbors, function(neighbors){
-    console.log(neighbors);
     document.getElementById(neighbors.integerLocation).classList.add("highlight");
 
     setTimeout(function(){
@@ -288,6 +288,8 @@ function minesweeper(x,y,bombs) {
   appendTilesToPage();
   initTimer();
   detectClicks();
+$$(".tile").addEventListenerAll("dblclick", highlightCell);
+
   $(".flags-inner").innerHTML =  String.fromCodePoint(0x1F4A3) + game.flagsPlaced  
 }
 
@@ -297,4 +299,3 @@ minesweeper(8,11,15);
 
 document.querySelector(".restart-inner").addEventListener("click", handleStartTimer);
 
-$$(".tile").addEventListenerAll("dblclick", highlightCell);
