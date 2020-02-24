@@ -1,5 +1,4 @@
 let game; //init game
-let emojis;
 
 
 class Tile{

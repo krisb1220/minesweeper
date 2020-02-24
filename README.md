@@ -12,7 +12,7 @@ This is a full Javascript Minesweeper full with runnable tests, game logic, and 
 
 # Commit Log
 
-# COMMIT 46:
+# COMMIT 47:
 
 Bugs mentioned in Commit 45 are still present. Extremely minor changes and some optimizations. 
 

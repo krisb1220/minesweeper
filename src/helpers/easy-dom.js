@@ -4,6 +4,10 @@
 *                                         *
 ********************/
 
+let emojis;
+
+
+//Get Emojis
 function getEmojis(){
 	fetch("https://raw.githubusercontent.com/krisb1220/minesweeper/master/src/helpers/emoji.json").then(
 		function(res){
@@ -14,18 +18,27 @@ function getEmojis(){
 	})
 }
 
+
+//Query Selector All
 function emojify(name){
 	return String.fromCodePoint("0x" + emojis[name].unicode)
 }
 
+
+//Query Selector
 function $(element){
 	return document.querySelector(element);
 }
 
+
+//Query Selector All
 function $$(element){
 	return document.querySelectorAll(element);
 }
 
+
+
+//Easy ForEach
 var forEach = function (collection, callback, scope) {
 	if (collection.__proto__ === Object.prototype) {
 		for (var prop in collection) {
@@ -40,10 +53,14 @@ var forEach = function (collection, callback, scope) {
 	}
 };
 
+
+//Create HTML Element
 function createElement(element){
   return document.createElement(element)
 }
 
+
+//Add Event Listener To A NodeList
 function addEventListenerAll(element, listener, callback) {
    
   if (element.__proto__ === NodeList.prototype){
@@ -55,6 +72,8 @@ function addEventListenerAll(element, listener, callback) {
   }
 }
 
+
+//Add "Click" event listener to an element
 function ifClicked(element, callback) {
    
   if (element.__proto__ == Array.prototype || element.__proto__ === NodeList.prototype){
@@ -71,6 +90,7 @@ function ifClicked(element, callback) {
   }
 }
 
+//Adds HTML to an element
 function addHTML(element, string) {
 	$(element).innerHTML += string;
 } 
@@ -79,38 +99,18 @@ function changeHTML(element, string) {
 	$(element).innerHTML = string;
 } 
 
-function testRandomNumbers(iterations,range){
-
-  console.time(`${iterations} iterations completed in:`)
-
-  let numbers = {};
-
-  for(i=0;i<iterations;i++){
-    let num = Math.ceil(Math.random()*range)
-    numbers.hasOwnProperty(num) ? numbers[num]++ : numbers[num] = 1;
-  }
-
-  console.timeEnd(`${iterations} iterations completed in:`)
-
-  return numbers;
-
-}
-
-
-
 
 /* ADD PROTOTYPES*/
 
-HTMLElement.prototype.changeHTML = function(string) {
-	this.innerHTML = string;
+HTMLElement.prototype.changeHTML = function(DOMString) {
+	this.innerHTML = DOMString
 }
 
-HTMLElement.prototype.addHTML = function(string){
-  this.innerHTML += string;
-  console.log(this);
+HTMLElement.prototype.addHTML = function(DOMString){
+  this.innerHTML += DOMString;
 } 
 
-HTMLElement.ifClicked = function(element, callback){
+HTMLElement.ifClicked = function(callback){
     this.addEventListener("click",  callback);
 }
 
@@ -123,5 +123,11 @@ NodeList.prototype.addEventListenerAll = function(listener, callback) {
   } else {
     console.error("Function ONLY ACCEPTS NodeList");
   }
+}
+
+
+//Add Event Listener Shorthand
+HTMLElement.prototype.on = function(listener, callback){
+  this.addEventListener(listener, callback);
 }
 
