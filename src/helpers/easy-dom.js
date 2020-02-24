@@ -27,7 +27,20 @@ function emojify(name){
 
 //Query Selector
 function $(element){
-	return document.querySelector(element);
+   
+    if(element.charAt(0) == "#") {
+        return document.getElementById(element.split("#")[1]);
+    }
+      
+    else if(element.charAt(0) == '.'){
+        let elementsInList = document.getElementsByClassName(element.split(".")[1]);
+        return elementsInList[0];   
+    }
+      
+    else { 
+      return document.querySelector(element); 
+    }
+
 }
 
 
@@ -92,11 +105,11 @@ function ifClicked(element, callback) {
 
 //Adds HTML to an element
 function addHTML(element, string) {
-	$(element).innerHTML += string;
+	document.querySelector(element).innerHTML += string;
 } 
 
 function changeHTML(element, string) {
-	$(element).innerHTML = string;
+	document.querySelector(element).innerHTML = string;
 } 
 
 
@@ -114,14 +127,14 @@ HTMLElement.ifClicked = function(callback){
     this.addEventListener("click",  callback);
 }
 
-NodeList.prototype.addEventListenerAll = function(listener, callback) {
+NodeList.prototype.onAll = function(listener, callback) {
    
   if (this.__proto__ === NodeList.prototype){
     this.forEach(function(elementIndividual){
       elementIndividual.addEventListener(listener, callback)
     });
   } else {
-    console.error("Function ONLY ACCEPTS NodeList");
+    console.error("addEventListenerAll Function ONLY ACCEPTS NodeList");
   }
 }
 

@@ -12,6 +12,18 @@ This is a full Javascript Minesweeper full with runnable tests, game logic, and 
 
 # Commit Log
 
+# COMMIT 50:
+
+Bugs mentioned in Commit 45 are still present. Minor bug fixes. 
+
+## Bug Fixes
+
+  a. Fixed error`Can't read property hasFlag of undefined`  when a number is clicked
+  b. Fixed bug where cell highlighting functionality wasn't working when a number is clicked
+
+====================================
+
+
 # COMMIT 47:
 
 Bugs mentioned in Commit 45 are still present. Extremely minor changes and some optimizations. 

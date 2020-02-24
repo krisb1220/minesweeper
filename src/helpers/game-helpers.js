@@ -17,7 +17,7 @@ function doNothing(){
   return;
 }
 
-function rnd(min,max){
+function randomRange(min,max){
  return Math.ceil(Math.random()*(max-min+1)+min );
 }
 
@@ -40,19 +40,13 @@ function calcTiles(x,y) {
 function returnTileHTML(tileObject) {
  let number = tileObject.bombsInCell;
  let id = tileObject.integerLocation;
- // console.log(tileObject);
- return `<div class="tile" id="${id}" ></div>`;
+ return `<div class="tile " id="${id}" ></div>`;
 }
 
 function returnTileHTMLWithNumber(tileObject) {
  let number = tileObject.bombsInCell;
- let id = tileObject.integerLocation;
- let newHTML = document.createElement("div");
- newHTML.classList.add(`${id}`);
- newHTML.id = id;
- newHTML.innerHTML = number;
  // console.log(tileObject);
- return newHTML;
+ return number;
 }
 
 
@@ -66,7 +60,7 @@ function showBoard(){
    if(tile.integerLocation >= (game.x) && tile.integerLocation <= game.numberTiles)  {
      tile.htmlElement = returnTileHTMLWithNumber(tile);
      
-     document.querySelector("#minesweeper").innerHTML += tile.htmlElement;
+     $("#minesweeper").innerHTML += tile.htmlElement;
    } 
  });
 }

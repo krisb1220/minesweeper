@@ -180,7 +180,7 @@ function handleClicks(){
     placeFlag(clicked);
   }
 
-  else if(!event.shiftKey){
+  else if(!event.shiftKey && clicked != undefined){
     mineTile(clicked, false)
   }
 
@@ -190,21 +190,50 @@ function detectClicks() {
 
     let tiles = $$(".tile") 
 
-    $$(".tile").addEventListenerAll("click", function(event){
+    $$(".tile").onAll("click", function(event){
       handleClicks(event);
   });
 }
 
-function highlightCell(){
-  let id = event.target.id
+function highlightCellById(id){
+
   forEach(game.gameObject[id].neighbors, function(neighbors){
     document.getElementById(neighbors.integerLocation).classList.add("highlight");
 
     setTimeout(function(){
       document.getElementById(neighbors.integerLocation).classList.remove("highlight")
+
     }, 1000)
 
   });
+
+}
+
+function highlightCellByClassName(id){
+
+  forEach(game.gameObject[id].neighbors, function(neighbors){
+
+    $("#" + neighbors.integerLocation).classList.add("highlight");
+
+    setTimeout(function(){
+      $("#" + neighbors.integerLocation).classList.remove("highlight")
+
+    }, 1000)
+
+  });
+
+}
+
+
+
+function highlightCell(){
+
+  let id = event.target.id
+  let className = event.target.classList[1];
+
+  // console.log(event.target.path);
+
+  event.target.tagName == "P" ? highlightCellByClassName(className) : highlightCellById(id);
 
 }
 
@@ -287,14 +316,16 @@ function minesweeper(x,y,bombs) {
   appendTilesToPage();
   initTimer();
   detectClicks();
-$$(".tile").addEventListenerAll("dblclick", highlightCell);
+
+  $$(".tile").onAll("dblclick", highlightCell);
 
   $(".flags-inner").innerHTML =  String.fromCodePoint(0x1F4A3) + game.flagsPlaced  
+
 }
 
 
 getEmojis();
 minesweeper(8,11,15);
 
-document.querySelector(".restart-inner").addEventListener("click", handleStartTimer);
+$(".restart-inner").on("click", handleStartTimer);
 

@@ -1,3 +1,16 @@
+# COMMIT 50:
+
+Bugs mentioned in Commit 45 are still present. Minor bug fixes. 
+
+## Bug Fixes
+
+  a. Fixed error`Can't read property hasFlag of undefined`  when a number is clicked
+  b. Fixed bug where cell highlighting functionality wasn't working when a number is clicked
+  c. Added functionality to to Easy Dom function `$()` to accept numbers as ID and Class names
+  
+====================================
+
+
 # COMMIT 47:
 
 Bugs mentioned in Commit 45 are still present. Extremely minor changes and some optimizations. 
