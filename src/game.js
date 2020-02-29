@@ -72,12 +72,6 @@ function getNeighbors() {
       
     let lo = value.integerLocation;
 
-    if(value.hasBomb) {
-      value.bombsInCell = 'BOMB';
-      return;
-    } 
-
-
     if(lo != 1 && lo >= game.x && lo != game.x) {
       value.neighbors.push(game.gameObject[lo - game.x]) //top
     }
@@ -173,6 +167,7 @@ function handleClicks(){
   if(game.minedTiles == 0 && !event.shiftKey){
     // console.log("gs")
     gameStarted();
+    initTimer();
     mineTile(clicked, false)
   }
 
@@ -198,7 +193,10 @@ function detectClicks() {
 function highlightCellById(id){
 
   forEach(game.gameObject[id].neighbors, function(neighbors){
+    
+    if(!neighbors.hasFlag){
     document.getElementById(neighbors.integerLocation).classList.add("highlight");
+    }
 
     setTimeout(function(){
       document.getElementById(neighbors.integerLocation).classList.remove("highlight")
@@ -212,8 +210,10 @@ function highlightCellById(id){
 function highlightCellByClassName(id){
 
   forEach(game.gameObject[id].neighbors, function(neighbors){
-
+   
+    if(!neighbors.hasFlag){
     $("#" + neighbors.integerLocation).classList.add("highlight");
+    }
 
     setTimeout(function(){
       $("#" + neighbors.integerLocation).classList.remove("highlight")
@@ -247,7 +247,7 @@ function handleStartTimer(){
   
   else if (game.gameStarted) {
     game.gameStarted = false;
-    changeHTML(".restart-inner", "Start");
+    changeHTML(".restart-inner", "");
     game.gameTime.stop();
     minesweeper(8,11,15)
     return;
@@ -314,9 +314,10 @@ function minesweeper(x,y,bombs) {
   getNeighbors();
   getBombsInCells();
   appendTilesToPage();
-  initTimer();
   detectClicks();
-
+  
+  $(".minutes").innerHTML = "00";
+  $(".seconds").innerHTML = "00";
   $$(".tile").onAll("dblclick", highlightCell);
 
   $(".flags-inner").innerHTML =  String.fromCodePoint(0x1F4A3) + game.flagsPlaced  

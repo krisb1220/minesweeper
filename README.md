@@ -12,6 +12,20 @@ This is a full Javascript Minesweeper full with runnable tests, game logic, and 
 
 # Commit Log
 
+# COMMIT 52:
+
+Game is FINALLY  fully functional!!!! (2/28/2020)
+
+# Changes
+
+  a. Added cell chain reaction !!
+  b. Fixed bug where if a bomb was double clicked it would not run the `highlight` function, thus revealing that the cell is a mine. Caused by bomb cells not having a `[neighbors]` property. 
+
+## Bug Fixes
+
+  a. Fixed timer bug
+====================================
+
 # COMMIT 50:
 
 Bugs mentioned in Commit 45 are still present. Minor bug fixes. 

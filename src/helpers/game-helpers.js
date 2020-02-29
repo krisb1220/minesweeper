@@ -69,13 +69,27 @@ function hideBoard() {
  appendTilesToPage();
 }
 
+function revealNeighbors(startingPoint) {
+  bombsInNeighbors = 0;
+  start = startingPoint.neighbors; 
+
+  start.forEach(function(neighbor){
+    neighbor.hasBomb ? bombsInNeighbors++ : doNothing();
+  })
+
+  if(bombsInNeighbors == 0) {
+    start.forEach(function(neighbor){
+      !neighbor.isOpen ? mineTile(neighbor) : doNothing();
+    })
+  }
+
+}
 
 function placeFlag(tile) {
 
  // tile.hasFlag ? tile.hasFlag = true : tile.hasFlag = false;
  let location = tile.integerLocation;
 
- console.log(tile.hasFlag);
  if (!tile.isMined) {
    if(tile.hasFlag) {
      game.flagsPlaced++;
@@ -110,6 +124,7 @@ function mineTile(tile, isFromLoss) {
    document.getElementById(tile.integerLocation).innerHTML = `<p class="number ${tile.integerLocation}">` + tile.bombsInCell + "</p>";
    document.getElementById(tile.integerLocation).classList.add("tile-mined");
    document.getElementById(tile.integerLocation).style.color = game.colors[document.getElementById(tile.integerLocation).innerText];
+   revealNeighbors(tile);
  } 
 
  else if(tile.hasBomb && game.gameStarted) {

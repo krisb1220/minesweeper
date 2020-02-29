@@ -1,3 +1,19 @@
+# Commit Log
+
+# COMMIT 52:
+
+Game is FINALLY  fully functional!!!! (2/28/2020)
+
+# Changes
+
+  a. Added cell chain reaction !!
+  b. Fixed bug where if a bomb was double clicked it would not run the `highlight` function, thus revealing that the cell is a mine. Caused by bomb cells not having a `[neighbors]` property. 
+
+## Bug Fixes
+
+  a. Fixed timer bug
+====================================
+
 # COMMIT 50:
 
 Bugs mentioned in Commit 45 are still present. Minor bug fixes. 
@@ -7,7 +23,7 @@ Bugs mentioned in Commit 45 are still present. Minor bug fixes.
   a. Fixed error`Can't read property hasFlag of undefined`  when a number is clicked
   b. Fixed bug where cell highlighting functionality wasn't working when a number is clicked
   c. Added functionality to to Easy Dom function `$()` to accept numbers as ID and Class names
-  
+
 ====================================
 
 
