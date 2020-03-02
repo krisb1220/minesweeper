@@ -12,6 +12,16 @@ This is a full Javascript Minesweeper full with runnable tests, game logic, and 
 
 # Commit Log
 
+# COMMIT 53:
+
+Minor changes
+
+# Changes
+
+  a. Added fast mine on tile double click when flags in cell == number in tile
+
+====================================
+
 # COMMIT 52:
 
 Game is FINALLY  fully functional!!!! (2/28/2020)

@@ -38,9 +38,9 @@ function calcTiles(x,y) {
 }
 
 function returnTileHTML(tileObject) {
- let number = tileObject.bombsInCell;
- let id = tileObject.integerLocation;
- return `<div class="tile " id="${id}" ></div>`;
+  let number = tileObject.bombsInCell;
+  let id = tileObject.integerLocation;
+  return `<div class="tile " id="${id}" ></div>`;
 }
 
 function returnTileHTMLWithNumber(tileObject) {
@@ -51,25 +51,12 @@ function returnTileHTMLWithNumber(tileObject) {
 
 
 
-
-function showBoard(){
- 
-//  clearBoardHtml();
- forEach(game.gameObject, function(tile){
-   // console.log(tile);
-   if(tile.integerLocation >= (game.x) && tile.integerLocation <= game.numberTiles)  {
-     tile.htmlElement = returnTileHTMLWithNumber(tile);
-     
-     $("#minesweeper").innerHTML += tile.htmlElement;
-   } 
- });
-}
-
 function hideBoard() {
  appendTilesToPage();
 }
 
 function revealNeighbors(startingPoint) {
+  
   bombsInNeighbors = 0;
   start = startingPoint.neighbors; 
 
@@ -85,30 +72,39 @@ function revealNeighbors(startingPoint) {
 
 }
 
+
+function addFlag(tile) {
+  game.flagsPlaced--;
+  let flagEmoji = String.fromCodePoint(0x1F4A3);
+  $(".flags-inner").innerHTML = String.fromCodePoint(0x1F4A3) + game.flagsPlaced;
+  document.getElementById(tile.integerLocation).innerHTML = `<p class='flag'>${flagEmoji}</p>`;
+  document.getElementById(tile.integerLocation).classList.add("flagged");
+  tile.hasFlag = true;
+}
+
+function removeFlag(tile) {
+  game.flagsPlaced++;
+  document.getElementById(tile.integerLocation).innerHTML = '';
+  document.getElementById(tile.integerLocation).classList.remove("flagged");
+  $(".flags-inner").innerHTML = String.fromCodePoint(0x1F4A3) + game.flagsPlaced;
+  tile.hasFlag = false;
+}
+
 function placeFlag(tile) {
 
  // tile.hasFlag ? tile.hasFlag = true : tile.hasFlag = false;
- let location = tile.integerLocation;
 
- if (!tile.isMined) {
-   if(tile.hasFlag) {
-     game.flagsPlaced++;
-     document.getElementById(tile.integerLocation).innerHTML = '';
-     document.getElementById(tile.integerLocation).classList.remove("flagged")
-     $(".flags-inner").innerHTML =  String.fromCodePoint(0x1F4A3) + game.flagsPlaced
-     tile.hasFlag = false;
-   } 
+  if (!tile.isMined) {
 
-   else if(!tile.hasFlag && game.flagsPlaced != 0) {
-     game.flagsPlaced--;
-     let flagEmoji = String.fromCodePoint(0x1F4A3);
-     $(".flags-inner").innerHTML =  String.fromCodePoint(0x1F4A3) + game.flagsPlaced
-     document.getElementById(tile.integerLocation).innerHTML = `<p class='flag'>${flagEmoji}</p>`;
-     document.getElementById(tile.integerLocation).classList.add("flagged")
-     tile.hasFlag = true;
-   } 
- }
- 
+      if(tile.hasFlag) {
+        removeFlag(tile);
+      } 
+
+      else if(!tile.hasFlag && game.flagsPlaced != 0) {
+        addFlag(tile);
+      } 
+    
+   }
 
 }
 
@@ -118,34 +114,41 @@ function mineTile(tile, isFromLoss) {
    return;
  }
 
- if(!tile.isMined && !tile.hasBomb) {
-   game.minedTiles++
-   tile.isMined = true;
-   document.getElementById(tile.integerLocation).innerHTML = `<p class="number ${tile.integerLocation}">` + tile.bombsInCell + "</p>";
-   document.getElementById(tile.integerLocation).classList.add("tile-mined");
-   document.getElementById(tile.integerLocation).style.color = game.colors[document.getElementById(tile.integerLocation).innerText];
-   revealNeighbors(tile);
+ else if(!tile.isMined && !tile.hasBomb) {
+   clickedNormal(tile);
  } 
 
  else if(tile.hasBomb && game.gameStarted) {
-   tile.isMined = true;
-   document.getElementById(tile.integerLocation).innerHTML = `<p class='number' class={tile.integerLocation}>` + emojify("bomb") + "</p>";
-   document.getElementById(tile.integerLocation).classList.add("tile-mined");
-   game.gameStarted = false;
-   lose();
+   clickedBomb(tile);
  }
 
- else if(!isFromLoss && game.minedTiles == game.tilesToWin) {
+ if(!isFromLoss && game.minedTiles == game.tilesToWin) {
    win();
  }
 
  // cell.isMined = true;
 }
 
+function clickedBomb(tile) {
+  tile.isMined = true;
+  document.getElementById(tile.integerLocation).innerHTML = `<p class='number' class={tile.integerLocation}>` + emojify("bomb") + "</p>";
+  document.getElementById(tile.integerLocation).classList.add("tile-mined");
+  game.gameStarted = false;
+  lose();
+}
+
+function clickedNormal(tile) {
+  game.minedTiles++;
+  tile.isMined = true;
+  document.getElementById(tile.integerLocation).innerHTML = `<p class="number ${tile.integerLocation}">` + tile.bombsInCell + "</p>";
+  document.getElementById(tile.integerLocation).classList.add("tile-mined");
+  document.getElementById(tile.integerLocation).style.color = game.colors[document.getElementById(tile.integerLocation).innerText];
+  revealNeighbors(tile);
+}
+
 function showBoard(){
  forEach(game.gameObject, function(tile){
-   let meetsConditions =  !tile.hasBomb
-    meetsConditions ? mineTile(tile, true) : doNothing();
+   !tile.hasBomb ? mineTile(tile, false) : doNothing();
  })
 }
 
@@ -154,7 +157,7 @@ function win() {
  game.gamesWon++
  game.gameStarted = false;
  game.gameTime.stop();
-//  console.log("You Win!");
+ console.log("You Win!");
 }
 
 function lose() {
@@ -164,6 +167,7 @@ function lose() {
  game.gameStarted = false;
  game.gameTime.stop();	
  showBoard();
+ console.log("You lose!");
 }
 
 function addRowsToPage(){

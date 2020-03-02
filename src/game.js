@@ -1,4 +1,4 @@
-let game; //init game
+let game = {}; //init game
 
 
 class Tile{
@@ -16,14 +16,16 @@ class Tile{
 
 
 // class Game{
-//   constructor(x,y,numberBombs){
+
+//   constructor(x,y,numberBombs) {
 //     this.x = x;
 //     this.y = y;
 //     this.numberTiles = x*y;
 //     this.numberBombs = numberBombs;
 //     this.flagsPlaced = numberBombs;
-//     this.tilesToWin = this.numberTiles - numberBombs;
+//     this.tilesToWin = this.numberTiles - numberBombs;   
 //   }
+
 // }
 
 function clearBoardHtml() {
@@ -40,9 +42,11 @@ function populateField(x,y, numberBombs) {
   game.tilesToWin = game.numberTiles - game.numberBombs;
 
   // game = new Game(x,y,numberBombs);
+
   for(cells=1; cells<game.numberTiles+1; cells++ ) {
     game.gameObject[cells] = new Tile(cells);
   }
+
 }
 
 function setBombLocations(tiles, numberBombs) {
@@ -190,51 +194,41 @@ function detectClicks() {
   });
 }
 
-function highlightCellById(id){
 
-  forEach(game.gameObject[id].neighbors, function(neighbors){
+
+function highlight(element, method) {
+  let neighborsArray = game.gameObject[element].neighbors
+  let cellsWithoutFlags = 0; 
+    forEach(game.gameObject[element].neighbors, function(neighbors){
     
-    if(!neighbors.hasFlag){
-    document.getElementById(neighbors.integerLocation).classList.add("highlight");
+      if(!neighbors.hasFlag){
+      document.getElementById(neighbors.integerLocation).classList.add("highlight");
+      cellsWithoutFlags++
+      }
+  
+      setTimeout(function(){
+        document.getElementById(neighbors.integerLocation).classList.remove("highlight")
+  
+      }, 1000)
+  
+    });
+
+    if(neighborsArray.length - cellsWithoutFlags == game.gameObject[element].bombsInCell) {
+      forEach(game.gameObject[element].neighbors, function(neighbor){
+        if(!neighbor.hasFlag){
+          mineTile(neighbor);
+        }
+      })
+
     }
 
-    setTimeout(function(){
-      document.getElementById(neighbors.integerLocation).classList.remove("highlight")
-
-    }, 1000)
-
-  });
-
 }
-
-function highlightCellByClassName(id){
-
-  forEach(game.gameObject[id].neighbors, function(neighbors){
-   
-    if(!neighbors.hasFlag){
-    $("#" + neighbors.integerLocation).classList.add("highlight");
-    }
-
-    setTimeout(function(){
-      $("#" + neighbors.integerLocation).classList.remove("highlight")
-
-    }, 1000)
-
-  });
-
-}
-
 
 
 function highlightCell(){
-
   let id = event.target.id
   let className = event.target.classList[1];
-
-  // console.log(event.target.path);
-
-  event.target.tagName == "P" ? highlightCellByClassName(className) : highlightCellById(id);
-
+  event.target.tagName == "P" ? highlight(className) : highlight(id);
 }
 
 function handleStartTimer(){
@@ -327,6 +321,10 @@ function minesweeper(x,y,bombs) {
 
 getEmojis();
 minesweeper(8,11,15);
+game.gamesWon = 0;
+game.gamesFinished = 0;
+game.gamesLost = 0;
+
 
 $(".restart-inner").on("click", handleStartTimer);
 
