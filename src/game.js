@@ -14,20 +14,6 @@ class Tile{
 
 }
 
-
-// class Game{
-
-//   constructor(x,y,numberBombs) {
-//     this.x = x;
-//     this.y = y;
-//     this.numberTiles = x*y;
-//     this.numberBombs = numberBombs;
-//     this.flagsPlaced = numberBombs;
-//     this.tilesToWin = this.numberTiles - numberBombs;   
-//   }
-
-// }
-
 function clearBoardHtml() {
   document.querySelector("#minesweeper").innerHTML = '';
 }
@@ -55,14 +41,9 @@ function setBombLocations(tiles, numberBombs) {
   let bombsPushed = 0;
   
   forEach(game.gameObject, (tile)=>{
-    // console.log(tile);
-    //get random true/false value
     let isBomb = Math.random()*50 > 40;
-
     if(isBomb && bombsPushed != numberBombs && !tile.hasBomb){
-      bombsPushed++
-      bombLocations.push(tile.integerLocation)
-      tile.hasBomb = true;
+      bombsPushed = addBombsToArray(bombsPushed, bombLocations, tile);
     }
 
   });
@@ -71,9 +52,16 @@ function setBombLocations(tiles, numberBombs) {
   
 }
 
+function addBombsToArray(bombsPushed, bombLocations, tile) {
+  bombsPushed++;
+  bombLocations.push(tile.integerLocation);
+  tile.hasBomb = true;
+  return bombsPushed;
+}
+
 function getNeighbors() {
   forEach(game.gameObject, (value)=>{
-      
+  
     let lo = value.integerLocation;
 
     if(lo != 1 && lo >= game.x && lo != game.x) {
@@ -121,18 +109,15 @@ function getNeighbors() {
 }
 
 function countBombsInNeighbors(value){
-  // forEach(game.gameObject, (value)=>{
-    
   let bombsInCell = 0;
   
-    forEach(value.neighbors, (neighbor)=>{
-      if(neighbor.hasBomb) {
-        bombsInCell++ 
-      }
-    });
+  forEach(value.neighbors, (neighbor)=>{
+    if(neighbor.hasBomb) {
+      bombsInCell++ 
+    }
+  });
 
-    return bombsInCell;
-  // });
+  return bombsInCell;
 }
 
 function getBombsInCells(){
@@ -143,36 +128,44 @@ function getBombsInCells(){
   });
 }
 
-function appendTilesToPage(){
+function buildGrid(){
     clearBoardHtml();
     addRowsToPage();
-    let currentRow = 1;
-    forEach(game.gameObject, function(tile){
+    addTilesToPage();
+}
+
+function addTilesToPage() {
+  let currentRow = 1;
+  forEach(game.gameObject, function (tile) {
 
     tile.htmlElement = returnTileHTML(tile);
-    if(tile.integerLocation % game.x == 1 && tile.integerLocation != 1) {
-        currentRow++
-        document.querySelector("#row-"+currentRow).innerHTML += tile.htmlElement;
-      } else {
-        document.querySelector("#row-"+currentRow).innerHTML += tile.htmlElement;
-      }
+    if (tile.integerLocation % game.x == 1 && tile.integerLocation != 1) {
+      currentRow++;
+      document.querySelector("#row-" + currentRow).innerHTML += tile.htmlElement;
+    }
+    else {
+      document.querySelector("#row-" + currentRow).innerHTML += tile.htmlElement;
+    }
   });
 }
 
-function gameStarted(){
+function startGame(){
   game.gameStarted = true;
   game.gameTime.start();
   changeHTML(".restart-inner", "Restart");
 }
 
-function handleClicks(){
+function handleFirstClick(clicked){
+  startGame();
+  initTimer();
+  mineTile(clicked, false)
+}
+
+function handleClicks(event){
   clicked = game.gameObject[event.target.id]
 
   if(game.minedTiles == 0 && !event.shiftKey){
-    // console.log("gs")
-    gameStarted();
-    initTimer();
-    mineTile(clicked, false)
+    handleFirstClick(clicked);
   }
 
   else if(event.shiftKey) {
@@ -189,65 +182,72 @@ function detectClicks() {
 
     let tiles = $$(".tile") 
 
-    $$(".tile").onAll("click", function(event){
+    tiles.onAll("click", function(event){
       handleClicks(event);
+  });
+
+}
+
+function doFastMine(element) {
+  forEach(game.gameObject[element].neighbors, function (neighbor) {
+    if (!neighbor.hasFlag) {
+      mineTile(neighbor);
+    }
   });
 }
 
-
+function doHighlight(neighbors, cellsWithoutFlags) {
+  if (!neighbors.hasFlag) {
+    document.getElementById(neighbors.integerLocation).classList.add("highlight");
+    cellsWithoutFlags++;
+  }
+  setTimeout(function() {
+    document.getElementById(neighbors.integerLocation).classList.remove("highlight");
+  }, 1000);
+  return cellsWithoutFlags;
+}
 
 function highlight(element, method) {
   let neighborsArray = game.gameObject[element].neighbors
   let cellsWithoutFlags = 0; 
-    forEach(game.gameObject[element].neighbors, function(neighbors){
-    
-      if(!neighbors.hasFlag){
-      document.getElementById(neighbors.integerLocation).classList.add("highlight");
-      cellsWithoutFlags++
-      }
-  
-      setTimeout(function(){
-        document.getElementById(neighbors.integerLocation).classList.remove("highlight")
-  
-      }, 1000)
-  
-    });
+   
+  forEach(game.gameObject[element].neighbors, function(neighbors){
+      cellsWithoutFlags = doHighlight(neighbors, cellsWithoutFlags);
+  });
 
     if(neighborsArray.length - cellsWithoutFlags == game.gameObject[element].bombsInCell) {
-      forEach(game.gameObject[element].neighbors, function(neighbor){
-        if(!neighbor.hasFlag){
-          mineTile(neighbor);
-        }
-      })
-
+      doFastMine(element);
     }
 
 }
 
 
-function highlightCell(){
-  let id = event.target.id
-  let className = event.target.classList[1];
-  event.target.tagName == "P" ? highlight(className) : highlight(id);
+function handleHighlight(){
+  let id;
+  event.target.tagName == "P" ? id = event.target.classList[1] : id = event.target.id;
+  highlight(id);
 }
 
 function handleStartTimer(){
-
-
   if(!game.gameStarted){
-    gameStarted();
+    startGame();
     return;
   } 
   
   else if (game.gameStarted) {
-    game.gameStarted = false;
-    changeHTML(".restart-inner", "");
-    game.gameTime.stop();
-    minesweeper(8,11,15)
+    stopGame();
     return;
   }
 
 }
+
+function stopGame() {
+  game.gameStarted = false;
+  changeHTML(".restart-inner", "");
+  game.gameTime.stop();
+  minesweeper(8, 11, 15);
+}
+
 
 function initTimer(){
   
@@ -259,16 +259,11 @@ function initTimer(){
             game.gameTime.interval = setInterval(function(){
 
             if(game.gameTime.seconds != 59) {
-              game.gameTime.seconds++;
-              game.gameTime.minutes < 10 ?  changeHTML(".minutes",  "0" + game.gameTime.minutes) : changeHTML(".minutes",  game.gameTime.minutes);                                                 
-              game.gameTime.seconds < 10 ?  changeHTML(".seconds",  "0" + game.gameTime.seconds ) : changeHTML(".seconds",  game.gameTime.seconds);
+              addSecondsToClock();
             } 
             
             else {
-              game.gameTime.seconds = 0;
-              game.gameTime.minutes++
-              game.gameTime.minutes < 10 ?  changeHTML(".minutes",  "0" + game.gameTime.minutes) : changeHTML(".minutes",  game.gameTime.minutes);                                   
-              game.gameTime.seconds < 10 ?  changeHTML(".seconds",  "0" + game.gameTime.seconds ) : changeHTML(".seconds",  game.gameTime.seconds);                     
+              addMinutesToClock();                     
             }
 
           }, 1000);
@@ -281,6 +276,27 @@ function initTimer(){
       }
     
     }
+}
+
+
+function addMinutesToClock() {
+  game.gameTime.seconds = 0;
+  game.gameTime.minutes++;
+  game.gameTime.minutes < 10 ? changeHTML(".minutes", "0" + game.gameTime.minutes) : changeHTML(".minutes", game.gameTime.minutes);
+  game.gameTime.seconds < 10 ? changeHTML(".seconds", "0" + game.gameTime.seconds) : changeHTML(".seconds", game.gameTime.seconds);
+}
+
+function addSecondsToClock() {
+  game.gameTime.seconds++;
+  game.gameTime.minutes < 10 ? changeHTML(".minutes", "0" + game.gameTime.minutes) : changeHTML(".minutes", game.gameTime.minutes);
+  game.gameTime.seconds < 10 ? changeHTML(".seconds", "0" + game.gameTime.seconds) : changeHTML(".seconds", game.gameTime.seconds);
+}
+
+function initDOM() {
+  $(".minutes").innerHTML = "00";
+  $(".seconds").innerHTML = "00";
+  $$(".tile").onAll("dblclick", handleHighlight);
+  $(".flags-inner").innerHTML = String.fromCodePoint(0x1F4A3) + game.flagsPlaced;
 }
 
 
@@ -307,24 +323,20 @@ function minesweeper(x,y,bombs) {
   setBombLocations(game.numberTiles,game.numberBombs);
   getNeighbors();
   getBombsInCells();
-  appendTilesToPage();
+  buildGrid();
   detectClicks();
-  
-  $(".minutes").innerHTML = "00";
-  $(".seconds").innerHTML = "00";
-  $$(".tile").onAll("dblclick", highlightCell);
-
-  $(".flags-inner").innerHTML =  String.fromCodePoint(0x1F4A3) + game.flagsPlaced  
+  initDOM();  
 
 }
 
+function init() {
+  getEmojis();
+  minesweeper(8, 11, 15);
+  game.gamesWon = 0;
+  game.gamesFinished = 0;
+  game.gamesLost = 0;
+  $(".restart-inner").on("click", handleStartTimer);
+}
 
-getEmojis();
-minesweeper(8,11,15);
-game.gamesWon = 0;
-game.gamesFinished = 0;
-game.gamesLost = 0;
-
-
-$(".restart-inner").on("click", handleStartTimer);
+init();
 

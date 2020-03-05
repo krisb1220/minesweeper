@@ -52,7 +52,7 @@ function returnTileHTMLWithNumber(tileObject) {
 
 
 function hideBoard() {
- appendTilesToPage();
+ buildGrid();
 }
 
 function revealNeighbors(startingPoint) {
@@ -61,17 +61,29 @@ function revealNeighbors(startingPoint) {
   start = startingPoint.neighbors; 
 
   start.forEach(function(neighbor){
-    neighbor.hasBomb ? bombsInNeighbors++ : doNothing();
-  })
+    if (neighbor.hasBomb) {
+    bombsInNeighbors++;
+    }
+  }); 
 
-  if(bombsInNeighbors == 0) {
-    start.forEach(function(neighbor){
-      !neighbor.isOpen ? mineTile(neighbor) : doNothing();
-    })
-  }
+  reveal(bombsInNeighbors, start);
 
 }
 
+
+function reveal(bombsInNeighbors, start) {
+  
+  if (bombsInNeighbors == 0) {
+
+    start.forEach(function (neighbor) {
+      if (!neighbor.isOpen) {
+        mineTile(neighbor);
+      }
+      
+    });
+  }
+
+}
 
 function addFlag(tile) {
   game.flagsPlaced--;
@@ -183,6 +195,7 @@ function testGame(x,y,bombs,iterations) {
  console.time("all tests finished in....");
  console.group("tests");
  let timesFailed = 0;
+ let testsFailed = [];
 
  for(a=0; a<iterations;a++) {
    let tilesWithBombs= 0;
@@ -206,6 +219,7 @@ function testGame(x,y,bombs,iterations) {
      timesFailed++
      passed = false;
      failedList.push( "NOT ENOUGH BOMBS")
+     testsFailed.push(a);
    }  
 
  
@@ -230,6 +244,7 @@ function testGame(x,y,bombs,iterations) {
    console.groupEnd("test " + a)
  }
  console.log("Times Failed: " + timesFailed)	
+ console.log("Tests Failed: " + testsFailed )
  console.timeEnd("all tests finished in....");
  console.groupEnd("tests")
 }
