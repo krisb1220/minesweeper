@@ -1,5 +1,6 @@
 let game = {}; //init game
 
+//test
 
 class Tile{
   
@@ -122,7 +123,6 @@ function countBombsInNeighbors(value){
 
 function getBombsInCells(){
   forEach(game.gameObject, (tile)=>{
-    // console.log(`Counting bombs in Cell ${tile.integerLocation}....`)
     bombsInCell = countBombsInNeighbors(tile);
     bombsInCell != 0 ? tile.bombsInCell = bombsInCell : tile.bombsInCell = ''; 
   });
@@ -139,6 +139,7 @@ function addTilesToPage() {
   forEach(game.gameObject, function (tile) {
 
     tile.htmlElement = returnTileHTML(tile);
+
     if (tile.integerLocation % game.x == 1 && tile.integerLocation != 1) {
       currentRow++;
       document.querySelector("#row-" + currentRow).innerHTML += tile.htmlElement;
@@ -176,15 +177,35 @@ function handleClicks(event){
     mineTile(clicked, false)
   }
 
-};
+}
+
+function touchEnd(){
+  $("html").addHTML("touchEnd");
+  console.log("hello");
+}
+
 
 function detectClicks() {
-
-    let tiles = $$(".tile") 
-
-    tiles.onAll("click", function(event){
+  
+     $$(".tile").onAll("click", function(event){
       handleClicks(event);
-  });
+     });
+
+}
+
+function handleMobileClicks(){
+  
+  // .addEventListener("touchend", function(event){
+  //   console.log("touchend");
+  // }, false);
+
+  $$(".tile").onAll("long-press", function(event){
+    // console.log(event);
+    clicked = game.gameObject[event.target.id]
+    placeFlag(clicked);
+    window.navigator.vibrate(100);
+   
+  }, false);
 
 }
 
@@ -215,9 +236,9 @@ function highlight(element, method) {
       cellsWithoutFlags = doHighlight(neighbors, cellsWithoutFlags);
   });
 
-    if(neighborsArray.length - cellsWithoutFlags == game.gameObject[element].bombsInCell) {
-      doFastMine(element);
-    }
+  if(neighborsArray.length - cellsWithoutFlags == game.gameObject[element].bombsInCell) {
+    doFastMine(element);
+  }
 
 }
 
@@ -302,6 +323,7 @@ function initDOM() {
 
 function minesweeper(x,y,bombs) {
 
+  console.time("Game started in.....")
 
   game = {
     bombLocations: [],
@@ -315,9 +337,8 @@ function minesweeper(x,y,bombs) {
     x: 0,
     y: 0,
     colors: ["#000000", "#4148e8", "#23a455", "#ee3e35", "#34176b", "#512a31", "#ff7ccd", "#ff5000", "#81d53a"]
-    };
-
-
+    
+ };
 
   populateField(x,y,bombs);
   setBombLocations(game.numberTiles,game.numberBombs);
@@ -325,18 +346,35 @@ function minesweeper(x,y,bombs) {
   getBombsInCells();
   buildGrid();
   detectClicks();
-  initDOM();  
+  initDOM();    
+  
+  ed.ifMobile(function(){
+    game.isMobile = true;
+    handleMobileClicks();
+  })
+
+  console.timeEnd("Game started in.....")
 
 }
 
 function init() {
+
+
   getEmojis();
   minesweeper(8, 11, 15);
   game.gamesWon = 0;
   game.gamesFinished = 0;
   game.gamesLost = 0;
   $(".restart-inner").on("click", handleStartTimer);
+
 }
+
+
+let cb = function(){
+  $("html").addHTML(game.isMobile);
+}
+
+// ifMobile
 
 init();
 

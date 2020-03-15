@@ -55,8 +55,11 @@
 .timer {
   background: black;
   padding: 5px 0;
-  width: 7vw;
-  border-radius: 10px; }
+  width: auto;
+  height: auto;
+  padding: 5px 10px;
+  border-radius: 100px;
+  word-wrap: none; }
   .timer .timer-inner {
     margin: auto;
     width: fit-content; }

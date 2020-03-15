@@ -8,7 +8,7 @@ Minor changes
 
   a. Added fast mine on tile double click when flags in cell == number in tile
 
-====================================
+===================================
 
 # COMMIT 52:
 
@@ -34,7 +34,7 @@ Bugs mentioned in Commit 45 are still present. Minor bug fixes.
   b. Fixed bug where cell highlighting functionality wasn't working when a number is clicked
   c. Added functionality to to Easy Dom function `$()` to accept numbers as ID and Class names
 
-====================================
+===============================
 
 
 # COMMIT 47:

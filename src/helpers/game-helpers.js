@@ -21,22 +21,6 @@ function randomRange(min,max){
  return Math.ceil(Math.random()*(max-min+1)+min );
 }
 
-
-function createTileObject(cellNumber) {
- game.gameObject[cellNumber] = {
-   hasBomb:  false,
-   hasFlag: false,
-   isMined: false,
-   bombsInCell: 0,
-   integerLocation: cellNumber,
-   neighbors: []
- }
-}
-
-function calcTiles(x,y) {
- return x*y + ((x*2)+6);
-}
-
 function returnTileHTML(tileObject) {
   let number = tileObject.bombsInCell;
   let id = tileObject.integerLocation;
@@ -44,9 +28,8 @@ function returnTileHTML(tileObject) {
 }
 
 function returnTileHTMLWithNumber(tileObject) {
- let number = tileObject.bombsInCell;
- // console.log(tileObject);
- return number;
+  let number = tileObject.bombsInCell;
+  return number;
 }
 
 
@@ -72,22 +55,18 @@ function revealNeighbors(startingPoint) {
 
 
 function reveal(bombsInNeighbors, start) {
-  
   if (bombsInNeighbors == 0) {
-
     start.forEach(function (neighbor) {
       if (!neighbor.isOpen) {
         mineTile(neighbor);
       }
-      
     });
   }
-
 }
 
 function addFlag(tile) {
-  game.flagsPlaced--;
   let flagEmoji = String.fromCodePoint(0x1F4A3);
+  game.flagsPlaced--;
   $(".flags-inner").innerHTML = String.fromCodePoint(0x1F4A3) + game.flagsPlaced;
   document.getElementById(tile.integerLocation).innerHTML = `<p class='flag'>${flagEmoji}</p>`;
   document.getElementById(tile.integerLocation).classList.add("flagged");
